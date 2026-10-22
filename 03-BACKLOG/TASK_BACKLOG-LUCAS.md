@@ -42,22 +42,22 @@ owner: Lucas
 ### L-05 — Migración `consultas` + `rfqs` con RLS
 `P0` · `M` · depende de: L-01
 - SQL en `server/src/db/migrations/001_init.sql` con el schema del contrato §4 + políticas RLS (`auth.uid() = user_id`).
-- [ ] AC: tablas visibles en Supabase Dashboard; insert anónimo sin auth rechazado por RLS.
+- [x] AC: tablas visibles en Supabase Dashboard; insert anónimo sin auth rechazado por RLS.
 
 ### L-06 — Seed de corredores
 `P0` · `M` · depende de: L-05 · datos: [[Corredores-NOA]] · cura: [[LogisticsExpert]]
 - Cargar Pacífico y Atlántico (tabla `corredores` o JSON servido) con puertos, pasos, pros/contras, coordenadas lat/lng para el mapa + `depositosFiscales` (COCEL Salta, ver [[Corredores-NOA]] §2.1).
-- [ ] AC: los dos objetos `Corredor` completos según contrato §2.3 + array `depositosFiscales` en la response.
+- [x] AC: los dos objetos `Corredor` completos según contrato §2.3 + array `depositosFiscales` en la response.
 
 ### L-07 — Cliente Supabase server-side
 `P0` · `S` · depende de: L-01, L-03
 - `server/src/db/supabase.js` con service role (server-only) + helper `getUserClient(token)` para queries con RLS.
-- [ ] AC: consulta de prueba a `corredores` desde Node devuelve el seed.
+- [x] AC: consulta de prueba a `corredores` desde Node devuelve el seed.
 
 ### L-08 — Schemas zod del contrato
 `P0` · `S` · depende de: B-01 ([[TASK_BACKLOG-BRUNO]])
 - `FichaTecnica`, `Alerta`, `Corredor` como schemas zod en `server/src/lib/schemas.js` — validación de entrada en cada endpoint.
-- [ ] AC: POST con body inválido → `400 { error: { code: "VALIDATION_ERROR" } }`.
+- [x] AC: POST con body inválido → `400 { error: { code: "VALIDATION_ERROR" } }`.
 
 ---
 
