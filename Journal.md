@@ -253,6 +253,16 @@ El equipo testeó la app integrada y reportó 4 bugs de demo. Causas raíz y fix
 
 ---
 
+## 2026-10-22 — Extras de UI: calendario + logo ZOFRI
+
+**Rama:** `feat/calendario-logo` → merge a `main` local. Backlog: B-05/B-06 de [[TASK_BACKLOG-INTEGRACION]].
+
+- **`fechaEstimada` con calendario:** `FichaViewer` edita el campo con `<input type="date">` nativo — el valor ISO `YYYY-MM-DD` coincide con el contrato; display `dd/mm/aaaa`. Sin dependencias nuevas.
+- **Logo ZOFRI en header:** `client/public/logo-zofri.jpg` servido como estático; `<img>` a la izquierda de "Asistente Logístico NOA" en `Dashboard.jsx` (badge blanco redondeado sobre el fondo arena).
+- Verificación: lint 0/0 · tests 12/12 · build OK · asset y módulos sirven 200 en `:5173`.
+
+---
+
 ## Relacionado
 
 - Hub: [[INDEX]] · Backlogs: [[TASK_BACKLOG-NACHO]] · [[TASK_BACKLOG-INTEGRACION]] · Contrato: [[CONTRATO-API]]

@@ -31,9 +31,16 @@ export default function Dashboard() {
     <div className="min-h-screen">
       <header className="sticky top-0 z-10 border-b border-noa-cobre/20 bg-noa-arena/95 px-4 py-3 backdrop-blur">
         <div className="mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-2">
-          <div>
-            <h1 className="text-xl font-bold text-noa-tierra">Asistente Logístico NOA</h1>
-            <p className="text-xs text-slate-500">Hackathon INNOA · Comex-PuertoNoa ZOFRI</p>
+          <div className="flex items-center gap-3">
+            <img
+              src="/logo-zofri.jpg"
+              alt="ZOFRI"
+              className="h-10 w-auto shrink-0 rounded-md bg-white p-1 shadow-sm"
+            />
+            <div>
+              <h1 className="text-xl font-bold text-noa-tierra">Asistente Logístico NOA</h1>
+              <p className="text-xs text-slate-500">Hackathon INNOA · Comex-PuertoNoa ZOFRI</p>
+            </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {modo === 'fallback' && (

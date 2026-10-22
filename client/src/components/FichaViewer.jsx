@@ -89,6 +89,13 @@ const SELECT_OPCIONES = {
 const etiquetaOpcion = (path, valor) =>
   SELECT_OPCIONES[path]?.find(([v]) => v === valor)?.[1] ?? null
 
+// fechaEstimada se edita con calendario nativo (ISO YYYY-MM-DD, igual que
+// el contrato). Display: dd/mm/aaaa si es ISO; el string crudo si no.
+const esFecha = (path) => path === 'fechaEstimada'
+const REGEX_ISO = /^\d{4}-\d{2}-\d{2}$/
+const fechaDisplay = (valor) =>
+  REGEX_ISO.test(valor) ? valor.split('-').reverse().join('/') : String(valor)
+
 function Campo({ path, label, valor, severidad }) {
   const { ficha, actualizarFicha } = useApp()
   const [editando, setEditando] = useState(false)
@@ -148,6 +155,18 @@ function Campo({ path, label, valor, severidad }) {
                 </option>
               ))}
             </select>
+          ) : esFecha(path) ? (
+            <input
+              type="date"
+              autoFocus
+              value={REGEX_ISO.test(borrador) ? borrador : ''}
+              onChange={(e) => guardar(e.target.value)}
+              onBlur={() => setEditando(false)}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') setEditando(false)
+              }}
+              className="mt-0.5 w-full rounded border border-noa-cobre px-2 py-0.5 text-sm focus:outline-none focus:ring-2 focus:ring-noa-cobre/30"
+            />
           ) : (
             <input
               autoFocus
@@ -164,7 +183,9 @@ function Campo({ path, label, valor, severidad }) {
         ) : valor === null || valor === undefined || valor === '' ? (
           <span className="text-slate-400">—</span>
         ) : (
-          <span className="font-medium text-slate-800">{etiquetaOpcion(path, valor) ?? String(valor)}</span>
+          <span className="font-medium text-slate-800">
+            {etiquetaOpcion(path, valor) ?? (esFecha(path) ? fechaDisplay(valor) : String(valor))}
+          </span>
         )}
       </dd>
     </div>

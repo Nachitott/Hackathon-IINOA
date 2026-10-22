@@ -176,6 +176,14 @@ Bugs reportados por el equipo tras probar la app integrada. Todos verificados co
 - [x] AC: texto exacto reportado → `Peluk`/`Vitex`, origen `San Salvador de Jujuy/Jujuy`, destino `Tierra del Fuego/Argentina`, `coca`, `40 kg` (verificado vía `POST /api/parse`, `modo:fallback`).
 - [x] AC regresión: seeds reales (Perico×COCEL, Salta→China, Güemes→Miami) y T-10 parsean igual o mejor que antes.
 
+### B-05 — Calendario en `fechaEstimada`
+`P1` · `S` · pedido del usuario: "un calendario para elegir la fecha dentro de la ficha técnica"
+- [x] Fix: `FichaViewer` — `Campo` gana rama `<input type="date">` para `fechaEstimada` (commit al elegir, Escape cancela); display ISO → `dd/mm/aaaa`, no-ISO → string crudo, null → `—`.
+
+### B-06 — Logo ZOFRI en el header
+`P2` · `S` · pedido del usuario: "logo_zofri.jpg arriba a la izquierda, al lado del título"
+- [x] Fix: asset copiado a `client/public/logo-zofri.jpg`; `Dashboard.jsx` muestra `<img>` (h-10, badge blanco redondeado) a la izquierda de "Asistente Logístico NOA".
+
 ---
 
 ## Riesgos / notas del cruce
