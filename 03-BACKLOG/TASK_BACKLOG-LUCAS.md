@@ -18,7 +18,7 @@ owner: Lucas
 ### L-01 — Crear proyecto Supabase
 `P0` · `S` · depende de: — · ejecuta: [[BackendDev]]
 - Crear proyecto en supabase.com (región más cercana a AR), anotar `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`.
-- [ ] AC: las 3 keys en `.env` local de `server/` (nunca commiteado) y compartidas con el equipo por canal seguro.
+- [x] AC: las 3 keys en `.env` local de `server/` (nunca commiteado) y compartidas con el equipo por canal seguro.
 
 ### L-02 — Conseguir GEMINI_API_KEY
 `P0` · `S` · depende de: — · ejecuta: [[BackendDev]]
