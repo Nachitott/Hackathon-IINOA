@@ -1,6 +1,8 @@
 import { GoogleGenAI } from '@google/genai';
 import { FichaTecnicaSchema } from '../lib/schemas.js';
 import { parseFallback } from './parser-fallback.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 let aiInstance = null;
 
@@ -73,21 +75,38 @@ export async function extraerFichaTecnica(textoOriginal) {
     };
   }
 
+  const modelsToTry = ['gemini-3.5-flash', 'gemini-3.8-flash'];
+  let responseText = null;
+
+  for (const model of modelsToTry) {
+    try {
+      const prompt = `${SYSTEM_PROMPT}\n\nTEXTO DEL USUARIO:\n"""${textoOriginal}"""`;
+      const response = await ai.models.generateContent({
+        model,
+        contents: prompt,
+        config: {
+          responseMimeType: 'application/json',
+          temperature: 0
+        }
+      });
+      responseText = response?.text?.trim() || '';
+      if (responseText) break;
+    } catch (err) {
+      console.warn(`⚠️ [Gemini] Modelo ${model} falló (${err.message}). Intentando siguiente opción...`);
+    }
+  }
+
+  if (!responseText) {
+    console.log('🔄 Activando fallback heurístico seguro...');
+    const fichaFallback = parseFallback(textoOriginal);
+    return {
+      ficha: FichaTecnicaSchema.parse(fichaFallback),
+      modo: 'fallback'
+    };
+  }
+
   try {
-    const prompt = `${SYSTEM_PROMPT}\n\nTEXTO DEL USUARIO:\n"""${textoOriginal}"""`;
-
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash',
-      contents: prompt,
-      config: {
-        responseMimeType: 'application/json',
-        temperature: 0
-      }
-    });
-
-    const responseText = response?.text?.trim() || '';
     let parsedJson;
-
     try {
       parsedJson = JSON.parse(responseText);
     } catch (parseErr) {
@@ -103,8 +122,7 @@ export async function extraerFichaTecnica(textoOriginal) {
       modo: 'gemini'
     };
   } catch (err) {
-    console.error('⚠️ [Gemini] Error llamando a la API de Gemini (5xx o parse error):', err.message);
-    console.log('🔄 Activando fallback heurístico seguro...');
+    console.error('⚠️ [Gemini] Error validando salida de Gemini:', err.message);
     const fichaFallback = parseFallback(textoOriginal);
     return {
       ficha: FichaTecnicaSchema.parse(fichaFallback),

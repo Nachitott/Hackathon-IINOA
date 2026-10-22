@@ -23,7 +23,7 @@ owner: Lucas
 ### L-02 — Conseguir GEMINI_API_KEY
 `P0` · `S` · depende de: — · ejecuta: [[BackendDev]]
 - Generar key en Google AI Studio; verificar con un request de prueba al endpoint de Gemini.
-- [ ] AC: `curl` de prueba devuelve 200 con texto generado.
+- [x] AC: `curl` de prueba devuelve 200 con texto generado.
 
 ### L-03 — Scaffold API Express
 `P0` · `S` · depende de: — · skill: [[Stack-Tecnico]]
