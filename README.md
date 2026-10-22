@@ -41,6 +41,13 @@ npm run dev
 ```
 La API queda escuchando en `http://localhost:3001` con recarga automática.
 
+### 5. Healthcheck Pre-Demo
+Para verificar todos los endpoints y el estado del backend antes de la presentación:
+```bash
+npm run healthcheck
+```
+Genera un reporte en tabla indicando el estado (`✅ OK`), tiempos de respuesta y modo de operación.
+
 ---
 
 ## 📡 Catálogo de Endpoints (CONTRATO-API)

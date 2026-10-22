@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "start": "node src/index.js"
+    "dev:demo": "nodemon src/index.js",
+    "start": "node src/index.js",
+    "healthcheck": "node src/scripts/healthcheck.js"
   },
   "dependencies": {
     "@google/genai": "^2.30.0",

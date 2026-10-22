@@ -3,12 +3,13 @@ import { requireAuth } from '../middleware/auth.js';
 import { validateBody } from '../middleware/validate.js';
 import { ConsultaCreateBodySchema } from '../lib/schemas.js';
 import { supabaseAdmin } from '../db/supabase.js';
+import { DEMO_CONSULTAS } from '../db/seeds/demo-consultas.js';
 import crypto from 'crypto';
 
 const router = Router();
 
-// Almacén en memoria de respaldo para garantizar demo sin base de datos activa
-const localConsultasStore = [];
+// Almacén de respaldo inicializado con datos demo ricos para que el historial nunca esté vacío
+const localConsultasStore = [...DEMO_CONSULTAS];
 
 /**
  * POST /api/consultas
@@ -90,7 +91,11 @@ router.get('/', requireAuth, async (req, res, next) => {
         return res.status(200).json({ consultas: localConsultasStore });
       }
 
-      return res.status(200).json({ consultas: data || [] });
+      if (!data || data.length === 0) {
+        return res.status(200).json({ consultas: DEMO_CONSULTAS });
+      }
+
+      return res.status(200).json({ consultas: data });
     } else {
       return res.status(200).json({ consultas: localConsultasStore });
     }

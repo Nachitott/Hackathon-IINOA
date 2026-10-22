@@ -123,17 +123,17 @@ owner: Lucas
 ### L-18 — Datos demo precargados
 `P0` · `S` · depende de: L-14
 - 2-3 consultas de ejemplo en la tabla para mostrar historial rico.
-- [ ] AC: historial de la demo no arranca vacío.
+- [x] AC: historial de la demo no arranca vacío.
 
 ### L-19 — Health-check pre-demo
 `P0` · `S` · depende de: L-09..L-16 · con: [[IntegradorQA]] (B-14)
 - Script `npm run healthcheck`: ping a todos los endpoints + test de Gemini → reporte verde/rojo.
-- [ ] AC: un comando dice si el back está listo para presentar.
+- [x] AC: un comando dice si el back está listo para presentar.
 
 ### L-20 — Variable `AUTH_OPTIONAL` + modo demo
 `P1` · `S` · depende de: L-15
 - Flag que permite correr la demo sin login si auth falla (RLS con user demo).
-- [ ] AC: `AUTH_OPTIONAL=true npm run dev` → consultas se guardan sin login.
+- [x] AC: `AUTH_OPTIONAL=true npm run dev` → consultas se guardan sin login.
 
 ---
 
