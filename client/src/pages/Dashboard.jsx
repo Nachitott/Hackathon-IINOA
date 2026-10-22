@@ -5,7 +5,10 @@
  * proyector; en pantallas menores se apilan (mobile-friendly).
  */
 
+import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { useApp } from '../lib/appContext.js'
+import { useAuth } from '../lib/authContext.js'
 import { USE_MOCK } from '../lib/api.js'
 import ChatInput from '../components/ChatInput.jsx'
 import FichaViewer from '../components/FichaViewer.jsx'
@@ -14,7 +17,15 @@ import ComparadorCorredores from '../components/ComparadorCorredores.jsx'
 import EditorRFQ from '../components/EditorRFQ.jsx'
 
 export default function Dashboard() {
-  const { modo, error, limpiarError, reset } = useApp()
+  const { modo, error, limpiarError, reset, ficha, guardarConsulta, loading } = useApp()
+  const { usuario, esDemo, logout, token } = useAuth()
+
+  // N-17: el error global se auto-descarta a los 8s — no queda colgado en la demo.
+  useEffect(() => {
+    if (!error) return
+    const t = setTimeout(limpiarError, 8000)
+    return () => clearTimeout(t)
+  }, [error, limpiarError])
 
   return (
     <div className="min-h-screen">
@@ -24,7 +35,7 @@ export default function Dashboard() {
             <h1 className="text-xl font-bold text-noa-tierra">Asistente Logístico NOA</h1>
             <p className="text-xs text-slate-500">Hackathon INNOA · Comex-PuertoNoa ZOFRI</p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             {modo === 'fallback' && (
               <span className="rounded-full bg-sev-media px-3 py-1 text-xs font-bold text-white">
                 parser en modo fallback (sin IA)
@@ -36,12 +47,39 @@ export default function Dashboard() {
             >
               {USE_MOCK ? 'MOCK' : 'API'}
             </span>
+            <Link
+              to="/historial"
+              className="rounded-full border border-slate-300 px-3 py-1 text-xs font-medium text-slate-600 hover:bg-slate-100"
+            >
+              Historial
+            </Link>
+            {ficha && (
+              <button
+                type="button"
+                onClick={async () => guardarConsulta(await token())}
+                disabled={Boolean(loading.guardar)}
+                className="rounded-full border border-sev-ok px-3 py-1 text-xs font-medium text-sev-ok hover:bg-sev-ok hover:text-white disabled:opacity-50"
+                title="Guardar consulta en el historial"
+              >
+                {loading.guardar ? 'Guardando…' : 'Guardar consulta'}
+              </button>
+            )}
             <button
               type="button"
               onClick={reset}
               className="rounded-full border border-slate-300 px-3 py-1 text-xs font-medium text-slate-600 hover:bg-slate-100"
             >
               Limpiar
+            </button>
+            <span className="text-xs text-slate-500" title={usuario?.email}>
+              {esDemo ? 'demo' : usuario?.email}
+            </span>
+            <button
+              type="button"
+              onClick={logout}
+              className="rounded-full border border-slate-300 px-3 py-1 text-xs font-medium text-slate-600 hover:bg-slate-100"
+            >
+              Salir
             </button>
           </div>
         </div>

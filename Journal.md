@@ -92,6 +92,48 @@ owner: Nacho
 
 ---
 
+## 2026-10-22 — Fase 3: Features extra (mapa, auth, historial, PDF, pulido)
+
+**Rama:** `feat/fase-1-fundaciones` (continuación — pendiente consolidar ramas al cerrar).
+
+**Scope:** [[TASK_BACKLOG-NACHO]] Fase 3 completa (N-13..N-17). **Aclaración de contexto:** el backend lo construye otro integrante — el front se cierra 100% contra mocks y el cruce real queda para N-19 (`VITE_USE_MOCK=false`).
+
+### Hecho
+
+| Pieza | Detalle |
+|---|---|
+| N-13 `MapaCorredores` | Leaflet + OSM (sin API key): `circleMarker` por puerto (lat/lng del contrato §2.3), líneas dashed Salta/Jujuy→puertos, color por corredor (pacífico=andes, atlántico=cobre), leyenda, `fitBounds`, atenuado del no-seleccionado. **Fallback: devuelve null → quedan las cards.** `scrollWheelZoom` off para no secuestrar el scroll de la página. |
+| N-14 Login | `@supabase/supabase-js` v2 + `lib/supabase.js` (cliente solo si hay env vars) + `authContext`/`AuthProvider` (mismo patrón split que app) + página `/login` + `RequireAuth` guard. "Entrar como demo" siempre disponible; form real aparece solo con `VITE_SUPABASE_*` configuradas. Token JWT via `token()` para `Authorization: Bearer`. |
+| N-15 `HistorialConsultas` | Ruta `/historial`: `GET /api/consultas` (tolera `{consultas:[]}` o array), cards con operación/carga/destino/nº altas/fecha → click repuebla estado y vuelve al dashboard. Botón "Guardar consulta" en header → `POST /api/consultas`. Mock ampliado a 2 consultas (T-01 + T-09). |
+| N-16 Exportar PDF | Botón en EditorRFQ → `POST /api/rfq/pdf` (nuevo `descargarRfqPdf` binario en api.js) → download. **Doble fallback**: ventana de impresión limpia (`window.print`, funciona sin back) → y "Copiar texto" que ya existía. En mock el endpoint tira `MOCK_SIN_PDF` controlado para ejercitar el fallback real. |
+| N-17 Pulido | Skeletons `animate-pulse` en FichaViewer/AlertasPanel durante `loading.parse`; error global auto-dismiss a los 8s; skeletons también en Historial. |
+
+### Decisiones
+
+- **Auth separada de app state**: `AuthProvider` envuelve a `AppProvider` — el guard usa `useAuth`, los paneles `useApp`. Token se pasa por parámetro a los helpers (el front no lo guarda).
+- **`GET /consultas` tolerante al shape** — el contrato no fija `{consultas:[]}` vs `[]` → se aceptan ambos (punto a confirmar con el back en el cruce).
+- Coordenadas Salta/Jujuy hardcodeadas en el mapa como `ORIGENES` — son presentación, no dato del contrato.
+- Leaflet con `circleMarker`/`divIcon` en vez de markers default (evita el clásico problema de iconos rotos en bundlers).
+
+### Verificado
+
+- `npm run lint`: **0/0** · `npm run build`: OK (84 módulos, ~118 kB gzip con leaflet)
+- Mocks en Node: 2 consultas en historial · `MOCK_SIN_PDF` controlado · POST consulta devuelve id
+- Todos los módulos nuevos sirven 200 en dev
+- Backlog: +5 ACs marcados (N-13..N-17) → **quedan solo N-19 y N-20, que dependen del back real**
+
+### Pendiente / riesgos
+
+- **Login real e historial propio no testeables** hasta que exista Supabase + back (L-01/L-14/L-15) — el shell y el guard quedan listos.
+- En el cruce: confirmar shape de `GET /consultas`, CORS `:5173`, y que `/rfq/pdf` devuelva `application/pdf`.
+- N-19 (checklist E2E con `USE_MOCK=false`) y N-20 (ensayo en máquina de presentación) son la integración misma.
+
+### Próximo
+
+- **Integración** cuando el compañero entregue el back: `VITE_USE_MOCK=false`, recorrer checklist E2E (Testing-E2E §4), reportar a B-14.
+
+---
+
 ## Relacionado
 
 - Hub: [[INDEX]] · Backlog: [[TASK_BACKLOG-NACHO]] · Contrato: [[CONTRATO-API]]

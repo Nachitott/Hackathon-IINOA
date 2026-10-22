@@ -7,6 +7,7 @@
 
 import { useEffect } from 'react'
 import { useApp } from '../lib/appContext.js'
+import MapaCorredores from './MapaCorredores.jsx'
 
 const esInvierno = () => {
   const mes = new Date().getMonth() // 0=ene — jun(5), jul(6), ago(7) en hemisferio sur
@@ -94,6 +95,8 @@ export default function ComparadorCorredores() {
   return (
     <section>
       <h2 className="mb-3 text-lg font-semibold text-noa-tierra">Comparador de corredores</h2>
+
+      <MapaCorredores />
 
       {pacificoSel && (
         <div className="mb-3 rounded-lg border border-sev-media/50 bg-sev-media/10 px-3 py-2 text-sm text-amber-900">

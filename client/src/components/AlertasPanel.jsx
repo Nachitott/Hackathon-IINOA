@@ -21,9 +21,21 @@ const irAlCampo = (campo) => {
 }
 
 export default function AlertasPanel() {
-  const { ficha, alertas, completo } = useApp()
+  const { ficha, alertas, completo, loading } = useApp()
 
   if (!ficha) {
+    if (loading.parse) {
+      return (
+        <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm" aria-busy="true">
+          <h2 className="mb-3 text-lg font-semibold text-noa-tierra">Alertas</h2>
+          <div className="space-y-2">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="h-16 animate-pulse rounded-lg bg-slate-100" />
+            ))}
+          </div>
+        </section>
+      )
+    }
     return (
       <section className="rounded-xl border border-dashed border-slate-300 bg-white/60 p-6 text-center shadow-sm">
         <h2 className="text-lg font-semibold text-noa-tierra">Alertas</h2>

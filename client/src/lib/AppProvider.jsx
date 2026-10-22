@@ -62,6 +62,33 @@ export function AppProvider({ children }) {
     }
   }, [])
 
+  /** POST /api/consultas — guarda la consulta actual en el historial (auth). */
+  const guardarConsulta = useCallback(async (token) => {
+    if (!ficha) return
+    setCargando('guardar', true)
+    try {
+      await api.guardarConsulta({ textoOriginal, ficha, alertas }, { token })
+      return true
+    } catch (e) {
+      setError(e)
+      return false
+    } finally {
+      setCargando('guardar', false)
+    }
+  }, [ficha, textoOriginal, alertas])
+
+  /** Carga una consulta del historial en el estado global (N-15). */
+  const cargarConsulta = useCallback((consulta) => {
+    setTextoOriginal(consulta.texto_original ?? '')
+    setFicha(consulta.ficha ?? null)
+    const alerts = consulta.alertas ?? []
+    setAlertas(alerts)
+    setCompleto(!hayAlertaAlta(alerts))
+    setModo(null)
+    setRfq(null)
+    setError(null)
+  }, [])
+
   /** GET /api/corredores (idempotente). */
   const cargarCorredores = useCallback(async () => {
     setCargando('corredores', true)
@@ -110,13 +137,15 @@ export function AppProvider({ children }) {
       loading, error,
       // acciones
       estructurar, actualizarFicha, cargarCorredores, generarRfq,
+      guardarConsulta, cargarConsulta,
       setCorredorSel, setError, limpiarError, reset,
     }),
     [
       textoOriginal, ficha, alertas, completo, modo,
       corredores, depositosFiscales, corredorSel, rfq,
       loading, error,
-      estructurar, actualizarFicha, cargarCorredores, generarRfq, reset,
+      estructurar, actualizarFicha, cargarCorredores, generarRfq,
+      guardarConsulta, cargarConsulta, reset,
     ],
   )
 

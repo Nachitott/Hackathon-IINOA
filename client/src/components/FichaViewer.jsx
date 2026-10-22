@@ -125,9 +125,27 @@ function Campo({ path, label, valor, severidad }) {
 }
 
 export default function FichaViewer() {
-  const { ficha, alertas } = useApp()
+  const { ficha, alertas, loading } = useApp()
 
   if (!ficha) {
+    if (loading.parse) {
+      return (
+        <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm" aria-busy="true">
+          <h2 className="mb-3 text-lg font-semibold text-noa-tierra">Ficha técnica</h2>
+          <div className="space-y-3">
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i}>
+                <div className="mb-1 h-3 w-24 animate-pulse rounded bg-slate-200" />
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="h-8 animate-pulse rounded bg-slate-100" />
+                  <div className="h-8 animate-pulse rounded bg-slate-100" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )
+    }
     return (
       <section className="rounded-xl border border-dashed border-slate-300 bg-white/60 p-6 text-center shadow-sm">
         <h2 className="text-lg font-semibold text-noa-tierra">Ficha técnica</h2>

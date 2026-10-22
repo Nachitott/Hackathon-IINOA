@@ -85,6 +85,41 @@ export const generarRfq = (ficha, corredorId, opts) =>
 /** GET /api/health — smoke test pre-demo. */
 export const healthCheck = (opts) => apiFetch('/health', opts)
 
+/**
+ * POST /api/rfq/pdf — responde application/pdf (binario, no JSON) — N-16.
+ * @returns {Promise<Blob>}
+ * @throws {ApiError}
+ */
+export async function descargarRfqPdf(texto, asunto, { token, signal } = {}) {
+  if (USE_MOCK) {
+    try {
+      return await mockFetch('/rfq/pdf', { method: 'POST', body: { texto, asunto } })
+    } catch (e) {
+      throw toApiError(e)
+    }
+  }
+  let res
+  try {
+    res = await fetch(`${BASE_URL}/rfq/pdf`, {
+      method: 'POST',
+      signal,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify({ texto, asunto }),
+    })
+  } catch (e) {
+    throw new ApiError('NETWORK_ERROR', `No se pudo conectar con la API (${e.message})`, 0)
+  }
+  if (!res.ok) {
+    const data = await res.json().catch(() => null)
+    const err = data?.error ?? {}
+    throw new ApiError(err.code ?? `HTTP_${res.status}`, err.message ?? `Error ${res.status}`, res.status)
+  }
+  return res.blob()
+}
+
 /** GET /api/consultas (auth). */
 export const getConsultas = (opts) => apiFetch('/consultas', opts)
 

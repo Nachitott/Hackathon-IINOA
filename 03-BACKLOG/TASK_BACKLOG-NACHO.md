@@ -92,27 +92,27 @@ owner: Nacho
 ### N-13 — `MapaCorredores` (Leaflet)
 `P1` · `L` · depende de: N-11
 - Leaflet + OSM: marcadores de puertos (lat/lng del contrato) y líneas Salta/Jujuy→puertos. Fallback: si el mapa no carga, quedan solo las cards de N-11.
-- [ ] AC: el mapa muestra ambos corredores diferenciados por color.
+- [x] AC: el mapa muestra ambos corredores diferenciados por color.
 
 ### N-14 — Login UI (Supabase Auth)
 `P1` · `M` · depende de: L-15 ([[TASK_BACKLOG-LUCAS]])
 - `@supabase/supabase-js` en el front: form login + guard de ruta + header con usuario. Si `AUTH_OPTIONAL`, botón "Entrar como demo".
-- [ ] AC: login real muestra historial propio; modo demo salta el login.
+- [x] AC: login real muestra historial propio; modo demo salta el login.
 
 ### N-15 — `HistorialConsultas`
 `P1` · `M` · depende de: L-14
 - Lista de consultas guardadas (`GET /api/consultas`) → click recarga la ficha en el dashboard.
-- [ ] AC: re-cargar una consulta vieja repuebla ficha+alertas.
+- [x] AC: re-cargar una consulta vieja repuebla ficha+alertas.
 
 ### N-16 — Exportar RFQ a PDF
 `P1` · `S` · depende de: L-16
 - Botón "Descargar PDF" → `POST /api/rfq/pdf` → download. Fallback siempre disponible: "Copiar texto" (N-12).
-- [ ] AC: PDF descargado se abre con la ficha + texto del RFQ.
+- [x] AC: PDF descargado se abre con la ficha + texto del RFQ.
 
 ### N-17 — Pulido visual y estados
 `P1` · `M` · depende de: N-05, B-06 · spec: [[UXUIDesigner]]
 - Empty states, toasts de error, responsive básico, indicador `"modo": "fallback"` cuando el parser corre sin Gemini.
-- [ ] AC: ningún estado de la app se ve "roto" en la demo.
+- [x] AC: ningún estado de la app se ve "roto" en la demo.
 
 ---
 

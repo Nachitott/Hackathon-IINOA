@@ -304,13 +304,30 @@ export async function mockFetch(path, { method = 'GET', body } = {}) {
             texto_original: EJEMPLOS['T-01'],
             ficha: fichaT01(),
             alertas: alertasParaFicha(fichaT01()).alertas,
+            created_at: new Date(Date.now() - 86400000).toISOString(),
+          },
+          {
+            id: 'mock-consulta-2',
+            texto_original: EJEMPLOS['T-09'],
+            ficha: fichaT09(),
+            alertas: alertasParaFicha(fichaT09()).alertas,
             created_at: new Date().toISOString(),
           },
         ],
       })
 
     case 'POST /consultas':
-      return { id: 'mock-consulta-2' }
+      return { id: `mock-consulta-${Date.now()}` }
+
+    case 'POST /rfq/pdf':
+      // El PDF real lo genera el back (pdfkit, L-16): en mock el endpoint
+      // tira error controlado para que el front ejercite su fallback.
+      throw {
+        error: {
+          code: 'MOCK_SIN_PDF',
+          message: 'PDF no disponible en modo mock — usá Copiar texto o el fallback de impresión.',
+        },
+      }
 
     default:
       throw { error: { code: 'NOT_FOUND', message: `Mock no definido para ${ruta}` } }
