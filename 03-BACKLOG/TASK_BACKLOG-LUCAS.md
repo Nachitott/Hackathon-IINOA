@@ -99,22 +99,22 @@ owner: Lucas
 ### L-14 — Persistencia `POST`/`GET /api/consultas`
 `P1` · `M` · depende de: L-05, L-09
 - Guardar `texto_original`, `ficha`, `alertas`; GET devuelve historial del `user_id` del JWT (o todas si demo sin auth, flag `AUTH_OPTIONAL=true`).
-- [ ] AC: consulta guardada aparece en GET y en Supabase Dashboard.
+- [x] AC: consulta guardada aparece en GET y en Supabase Dashboard.
 
 ### L-15 — Middleware auth Supabase
 `P1` · `M` · depende de: L-07
 - Verificar JWT (`supabase.auth.getUser(token)`); proteger `/api/consultas`; endpoint `/api/auth/health` para probar.
-- [ ] AC: request sin token → `401`; con token válido → pasa.
+- [x] AC: request sin token → `401`; con token válido → pasa.
 
 ### L-16 — `POST /api/rfq/pdf`
 `P1` · `M` · depende de: L-12 · skill: [[Generacion-RFQ]] §4
 - pdfkit: documento con header, la ficha en tabla, cuerpo del RFQ. Fallback: si falla, el front usa copiar texto.
-- [ ] AC: response `Content-Type: application/pdf` abre y es legible.
+- [x] AC: response `Content-Type: application/pdf` abre y es legible.
 
 ### L-17 — Deploy (opcional) o runbook local
 `P2` · `M` · depende de: L-13
 - Render/Railway para la API, o documentar `npm start` local + orden de arranque en README.
-- [ ] AC: cualquier integrante levanta el back con el README, sin ayuda.
+- [x] AC: cualquier integrante levanta el back con el README, sin ayuda.
 
 ---
 
