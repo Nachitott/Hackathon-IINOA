@@ -74,6 +74,11 @@ Campos ausentes en el texto original llegan como `null` — **nunca** se inventa
   },
   "incoterm": "string | null",
   "fechaEstimada": "string (ISO) | null",
+  "operativa": {
+    "ritmoCargaDiario": "string | null",
+    "plazoSobreestadiaDias": "number | null",
+    "depositoFiscalVacios": "string | null"
+  },
   "observaciones": "string | null"
 }
 ```
@@ -81,6 +86,10 @@ Campos ausentes en el texto original llegan como `null` — **nunca** se inventa
 - `pesoKg` siempre normalizado a kilogramos (`tn` → ×1000).
 - `volumenM3` siempre normalizado a metros cúbicos.
 - `incoterm`: código de 3 letras si aparece (`FOB`, `CIF`, `EXW`, `CFR`, `DAP`…), `null` si no.
+- `operativa` captura los parámetros que el PDF del desafío marca como faltantes frecuentes (ver [[GLOSARIO]]):
+  - `ritmoCargaDiario`: cuánta carga despacha el cliente por día — texto libre (`"2 contenedores/día"`, `"500 kg/día"`).
+  - `plazoSobreestadiaDias`: días de *free time* que necesita en destino antes de caer en demurrage.
+  - `depositoFiscalVacios`: depósito fiscal/extraportuario para retiro o devolución de vacíos (ej. `"COCEL Salta"`) — mitiga el problema del *roundtrip*.
 
 ### 2.2 `Alerta`
 
@@ -150,8 +159,20 @@ Re-valida una ficha editada por el usuario (sin llamar a Gemini).
 
 ```json
 // Response 200
-{ "corredores": [ /* Corredor[] */ ] }
+{
+  "corredores": [ /* Corredor[] */ ],
+  "depositosFiscales": [
+    {
+      "nombre": "COCEL Salta",
+      "ciudad": "Salta",
+      "provincia": "Salta",
+      "nota": "Depósito fiscal extraportuario — retiro/devolución de vacíos sin enviar el camión al puerto"
+    }
+  ]
+}
 ```
+
+`depositosFiscales` alimenta el autocompletado del campo `operativa.depositoFiscalVacios` y la explicación del roundtrip en la UI.
 
 ### `POST /api/rfq` — Módulo 4 (propietario: [[RFQGenerator]])
 
@@ -231,6 +252,7 @@ RLS: `consultas` y `rfqs` solo visibles para su `user_id` (`auth.uid() = user_id
 ## Relacionado
 
 - [[CONTEXTO_MAESTRO]] — definición de los 4 módulos que este contrato implementa
+- [[GLOSARIO]] — vocabulario oficial del desafío (fuente de los campos `operativa.*`)
 - [[INDEX]] — índice general del proyecto
 - Agentes: [[LogisticsParser]] · [[RouteAnalyzer]] · [[RFQGenerator]] · [[FrontendDev]] · [[BackendDev]] · [[IntegradorQA]]
 - Skills: [[Parsing-NLP]] · [[Corredores-NOA]] · [[Validacion-Expediente]] · [[Generacion-RFQ]] · [[Stack-Tecnico]]

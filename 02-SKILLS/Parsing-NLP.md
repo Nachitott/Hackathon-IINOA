@@ -30,6 +30,15 @@ Recibir un texto desestructurado con jerga logística regional del NOA y devolve
 | "full", "contenedor completo", "FCL" | `contenedor` = tipo completo (no LCL) |
 | "exportar", "mandar afuera", "sacar del pais" | `operacion: "exportacion"` |
 | "importar", "traer de", "comprar afuera" | `operacion: "importacion"` |
+| "COCEL", "deposito fiscal", "extraportuario" | `operativa.depositoFiscalVacios` (ej. `"COCEL Salta"`) |
+| "free time", "dias libres", "sobreestadia", "demurrage" | `operativa.plazoSobreestadiaDias` (número de días) |
+| "X por dia", "diario", "ritmo de carga", "alcanzo N por dia" | `operativa.ritmoCargaDiario` (texto libre, ej. `"2 contenedores/día"`) |
+| "Angamos" | puerto de Mejillones → normalizar como `Angamos (Mejillones)` en destino/observaciones |
+| "ZOFRI", "zona franca" | referencia a Iquique (contexto importación) → notar en `observaciones` |
+| "naviera", "armador", "linea naviera", "forwarder", "agente de carga" | destinatario del RFQ (no es campo — va a `observaciones` si aporta contexto) |
+| "viaje en vacio", "roundtrip", "camion vacio" | problema de logística → `observaciones` si el cliente lo menciona |
+
+> Referencia completa de vocabulario: [[GLOSARIO]].
 
 ### Orígenes/destinos típicos del dominio
 
@@ -59,7 +68,13 @@ REGLAS:
 - "contenedor" solo puede ser: "20ST", "40ST", "40HC", "LCL", "reefer" o null.
 - "operacion" solo: "exportacion", "importacion" o null.
 - "incoterm": código de 3 letras o null.
-- Jerga regional permitida: ver diccionario adjunto.
+- "operativa.ritmoCargaDiario": texto libre si el texto indica ritmo de
+  despacho (ej. "2 contenedores por día", "500 kg diarios").
+- "operativa.plazoSobreestadiaDias": número de días si menciona free time,
+  días libres o sobreestadía (demurrage).
+- "operativa.depositoFiscalVacios": nombre del depósito fiscal si menciona
+  retirar/devolver vacíos localmente (ej. "COCEL Salta").
+- Jerga regional permitida: ver diccionario adjunto + [[GLOSARIO]].
 
 SCHEMA ESPERADO:
 {schema FichaTecnica de CONTRATO-API §2.1, pegado literalmente}
@@ -96,6 +111,7 @@ El response agrega `"modo": "fallback"` para que el front lo muestre (transparen
   "carga": { "tipo": "sal", "pesoKg": null, "volumenM3": null, "contenedor": "40ST", "cantidad": 2 },
   "incoterm": null,
   "fechaEstimada": null,
+  "operativa": { "ritmoCargaDiario": null, "plazoSobreestadiaDias": null, "depositoFiscalVacios": null },
   "observaciones": null
 }
 ```
@@ -111,6 +127,7 @@ El response agrega `"modo": "fallback"` para que el front lo muestre (transparen
   "carga": { "tipo": "maquinaria", "pesoKg": 8000, "volumenM3": null, "contenedor": "LCL", "cantidad": 12 },
   "incoterm": "FOB",
   "fechaEstimada": null,
+  "operativa": { "ritmoCargaDiario": null, "plazoSobreestadiaDias": null, "depositoFiscalVacios": null },
   "observaciones": "Fecha deseada: septiembre (sin año). Origen Brasil deducido del puerto de Santos."
 }
 ```

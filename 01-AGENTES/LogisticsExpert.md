@@ -15,7 +15,7 @@ El sistema es tan bueno como sus datos. Tu misión: que nada de lo que la app di
 
 ## 2. Responsabilidades
 
-- Curar y mantener [[Corredores-NOA]]: puertos, pasos, distancias, pros/contras reales.
+- Curar y mantener [[Corredores-NOA]] y [[GLOSARIO]]: puertos, pasos, distancias, depósitos fiscales (COCEL Salta), pros/contras y vocabulario real.
 - Definir qué campos son indispensables para cotizar → matriz de [[Validacion-Expediente]].
 - Validar el diccionario de jerga de [[Parsing-NLP]] (¿falta algún término regional?).
 - Auditar fixtures de [[Testing-E2E]]: ¿los outputs esperados son los correctos?
@@ -69,7 +69,7 @@ TU TRABAJO:
 
 ## Relacionado
 
-- Curás: [[Corredores-NOA]] · [[Validacion-Expediente]] · [[Parsing-NLP]] · [[Generacion-RFQ]]
+- Curás: [[Corredores-NOA]] · [[Validacion-Expediente]] · [[Parsing-NLP]] · [[Generacion-RFQ]] · [[GLOSARIO]]
 - Auditan con vos: [[IntegradorQA]] (fixtures T-01..T-08) · [[Pitch]] (datos del problema)
 - Contexto: [[CONTEXTO_MAESTRO]] §1-2 · [[RouteAnalyzer]] (consume tus datos)
 - Backlogs: [[TASK_BACKLOG-LUCAS]] (seed L-06) · [[TASK_BACKLOG-BRUNO]] (dataset B-02) · [[INDEX]]

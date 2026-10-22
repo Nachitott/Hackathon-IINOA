@@ -9,6 +9,13 @@
 * Esto genera consultas incompletas (omitiendo peso, volumen o tipo de contenedor), costos ineficientes por viajes en vacío (*roundtrips*) de contenedores, y dificultad para comparar visualmente los corredores del Pacífico (Paso de Jama) frente al Atlántico.
 * Existen demoras significativas en la redacción manual de pedidos de tarifa.
 
+### Usuarios afectados
+*Fuente: documento oficial del desafío Comex-PuertoNoa ZOFRI (§1).*
+1. **Operadores y Ejecutivos de Comercio Exterior:** necesitan validar y estructurar las solicitudes recibidas para evitar intercambios repetitivos de mensajes y acelerar la gestión de tarifas.
+2. **PYMES y Cooperativas Agroindustriales del NOA:** productores agrícolas e industriales (legumbres, hortalizas, tabaco procesado, minerales) que requieren visibilidad clara sobre alternativas de transporte, tiempos estimados y requisitos documentales para evaluar la factibilidad de sus exportaciones.
+
+> Ver [[GLOSARIO]] para el vocabulario oficial del desafío (depósito fiscal, roundtrip, free time, COCEL Salta, Angamos, etc.).
+
 ### El Objetivo
 Desarrollar un prototipo de **aplicación web** que funcione como un **asistente inteligente de estructuración logística**. 
 
@@ -68,6 +75,7 @@ Actuar como un equipo interdisciplinary de ingenieros de software, diseñadores 
 
 * [[INDEX]] — hub central del proyecto (navegación completa)
 * [[CONTRATO-API]] — contrato front↔back (schemas + endpoints)
+* [[GLOSARIO]] — vocabulario oficial del desafío Comex-PuertoNoa ZOFRI
 * Agentes (`01-AGENTES/`): [[LogisticsParser]] · [[RouteAnalyzer]] · [[RFQGenerator]] · [[FrontendDev]] · [[BackendDev]] · [[IntegradorQA]] · [[UXUIDesigner]] · [[LogisticsExpert]] · [[Pitch]]
 * Skills (`02-SKILLS/`): [[Parsing-NLP]] · [[Corredores-NOA]] · [[Validacion-Expediente]] · [[Generacion-RFQ]] · [[Stack-Tecnico]] · [[Testing-E2E]] · [[Pitch-Demo]]
 * Backlogs (`03-BACKLOG/`): [[TASK_BACKLOG-NACHO]] · [[TASK_BACKLOG-LUCAS]] · [[TASK_BACKLOG-BRUNO]]

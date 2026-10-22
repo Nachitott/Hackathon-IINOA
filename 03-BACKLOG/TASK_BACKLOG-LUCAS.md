@@ -46,8 +46,8 @@ owner: Lucas
 
 ### L-06 — Seed de corredores
 `P0` · `M` · depende de: L-05 · datos: [[Corredores-NOA]] · cura: [[LogisticsExpert]]
-- Cargar Pacífico y Atlántico (tabla `corredores` o JSON servido) con puertos, pasos, pros/contras, coordenadas lat/lng para el mapa.
-- [ ] AC: los dos objetos `Corredor` completos según contrato §2.3.
+- Cargar Pacífico y Atlántico (tabla `corredores` o JSON servido) con puertos, pasos, pros/contras, coordenadas lat/lng para el mapa + `depositosFiscales` (COCEL Salta, ver [[Corredores-NOA]] §2.1).
+- [ ] AC: los dos objetos `Corredor` completos según contrato §2.3 + array `depositosFiscales` en la response.
 
 ### L-07 — Cliente Supabase server-side
 `P0` · `S` · depende de: L-01, L-03
@@ -69,6 +69,7 @@ owner: Lucas
 - Fallback heurístico §4 ejecutándose si Gemini da 5xx → response con `"modo": "fallback"`.
 - Post-parseo: correr motor de validación (L-10) y devolver `ficha` + `alertas`.
 - [ ] AC: fixture T-01 devuelve `operacion: "exportacion"`, `contenedor: "40ST"`, `cantidad: 2`, `pesoKg: null` + alertas de peso/incoterm.
+- [ ] AC: fixture T-09 extrae `operativa.depositoFiscalVacios: "COCEL Salta"` y `plazoSobreestadiaDias: 14`.
 
 ### L-10 — `POST /api/validate`
 `P0` · `M` · depende de: L-08 · implementa: [[Validacion-Expediente]]
@@ -78,12 +79,13 @@ owner: Lucas
 ### L-11 — `GET /api/corredores`
 `P0` · `S` · depende de: L-06 · implementa: [[RouteAnalyzer]]
 - Servir el seed tal cual contrato §2.3.
-- [ ] AC: response contiene `pacifico` y `atlantico` con `puertos[].lat/lng` presentes.
+- [ ] AC: response contiene `pacifico` y `atlantico` con `puertos[].lat/lng` presentes + `depositosFiscales` con COCEL Salta.
 
 ### L-12 — `POST /api/rfq`
 `P0` · `M` · depende de: L-08 · implementa: [[RFQGenerator]] · skill: [[Generacion-RFQ]]
 - Template string interpolation; `null` → `[A COMPLETAR]`; incluir `advertencias` corriendo L-10 sobre la ficha recibida.
 - [ ] AC: con `corredorId: "pacifico"` el texto menciona Paso de Jama y puertos chilenos.
+- [ ] AC: el RFQ incluye sección "CONDICIONES OPERATIVAS" (ritmo, free time, depósito fiscal) con `[A COMPLETAR]` si faltan.
 
 ### L-13 — Pase por `IntegradorQA`
 `P0` · `S` · depende de: L-09..L-12
@@ -139,6 +141,6 @@ owner: Lucas
 
 - Hub: [[INDEX]] · Contexto: [[CONTEXTO_MAESTRO]] · Contrato: [[CONTRATO-API]]
 - Mi perfil: [[BackendDev]] · implemento a: [[LogisticsParser]] · [[RouteAnalyzer]] · [[RFQGenerator]]
-- Skills que uso: [[Parsing-NLP]] · [[Validacion-Expediente]] · [[Generacion-RFQ]] · [[Corredores-NOA]] · [[Stack-Tecnico]]
+- Skills que uso: [[Parsing-NLP]] · [[Validacion-Expediente]] · [[Generacion-RFQ]] · [[Corredores-NOA]] · [[Stack-Tecnico]] · Vocabulario: [[GLOSARIO]]
 - Backlogs del equipo: [[TASK_BACKLOG-NACHO]] · [[TASK_BACKLOG-BRUNO]]
 - Bugs que me reportan: template en [[Testing-E2E]] §6

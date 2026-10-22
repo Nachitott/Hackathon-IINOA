@@ -22,7 +22,7 @@ owner: Bruno
 
 ### B-02 — Dataset de fixtures `tests/fixtures/mensajes.json`
 `P0` · `M` · depende de: — · skill: [[Testing-E2E]] §2 · valida: [[LogisticsExpert]]
-- Mínimo 8 mensajes con jerga NOA (la tabla T-01..T-08 de la skill) + el output esperado de cada uno.
+- 10 mensajes con jerga NOA (la tabla T-01..T-10 de la skill, incl. COCEL/free time/ritmo de carga en T-09/T-10) + el output esperado de cada uno.
 - [ ] AC: cada fixture tiene `input`, `fichaEsperada` parcial y `alertasEsperadas` — sirve para parser (B-05) y para el botón "ejemplo" del front (N-18).
 
 ### B-03 — Convenciones de repo + README
@@ -117,6 +117,6 @@ owner: Bruno
 
 - Hub: [[INDEX]] · Contexto: [[CONTEXTO_MAESTRO]] · Contrato: [[CONTRATO-API]] (lo custodiás, B-01)
 - Mi perfil: [[IntegradorQA]] · co-demo con: [[Pitch]] · apoyo diseño de: [[UXUIDesigner]] · validación de dominio: [[LogisticsExpert]]
-- Skills: [[Testing-E2E]] · [[Pitch-Demo]] · [[Stack-Tecnico]] · [[Validacion-Expediente]]
+- Skills: [[Testing-E2E]] · [[Pitch-Demo]] · [[Stack-Tecnico]] · [[Validacion-Expediente]] · Vocabulario: [[GLOSARIO]]
 - Backlogs del equipo: [[TASK_BACKLOG-NACHO]] · [[TASK_BACKLOG-LUCAS]]
 - Producto que testeás: [[LogisticsParser]] · [[RouteAnalyzer]] · [[RFQGenerator]]

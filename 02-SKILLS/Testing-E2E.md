@@ -20,7 +20,7 @@ tags: [skill, testing, qa, e2e, demo]
 
 ## 2. Dataset de fixtures (`tests/fixtures/mensajes.json`)
 
-Mínimo 8 casos cubriendo completos/incompletos/jerga:
+10 casos cubriendo completos/incompletos/jerga/campos operativos nuevos:
 
 | ID | Texto de entrada | Debe detectar | Alertas esperadas |
 |---|---|---|---|
@@ -32,6 +32,8 @@ Mínimo 8 casos cubriendo completos/incompletos/jerga:
 | T-06 | "cif valparaiso, azucar 25tn en un 40" | import implícita?, CIF, 25.000 kg, 40ST | operacion ambigua → alta |
 | T-07 | "sal a india, 3x40hc, 80 toneladas totales, salimos de oran, EXW" | ficha casi completa → `completo: true` | fecha, empresa (medias) |
 | T-08 | "precio puesto en puerto de antofagasta, litio 20tn" | incoterm≈FOB en observaciones, Antofagasta origen/destino? | caso engañoso — validar con [[LogisticsExpert]] |
+| T-09 | "exportamos porotos a india, 2x40hc, 50tn, de perico jujuy — el vacio lo podemos retirar en COCEL salta y necesitamos 14 dias de free time" | `depositoFiscalVacios: "COCEL Salta"`, `plazoSobreestadiaDias: 14`, 40HC×2, 50.000 kg | casi completa: faltan medias menores |
+| T-10 | "mando 3 contenedores de azucar a europa, cargamos 1 por dia nomas" | `ritmoCargaDiario: "1 contenedor/día"`, azúcar, cantidad 3 (tipo?) | tipo de contenedor (alta) — "contenedores" sin tamaño |
 
 ## 3. Smoke tests API (checklist)
 

@@ -43,6 +43,7 @@ tags: [skill, pitch, demo, presentacion]
 
 | Pregunta probable | Respuesta |
 |---|---|
+| "¿Para quién es?" | Dos usuarios del desafío: ejecutivos de comercio exterior que atienden consultas informales, y PYMES/cooperativas agroindustriales del NOA que evalúan exportar. |
 | "¿Cotiza fletes reales?" | No: estructura la consulta y redacta el RFQ. La cotización la hacen las navieras — es scope honesto. |
 | "¿Por qué Gemini?" | Tier gratuito generoso, JSON mode nativo, rápido para extracción. |
 | "¿Y si el texto está muy incompleto?" | Justamente el Módulo 2: detecta faltantes y redacta las preguntas. |

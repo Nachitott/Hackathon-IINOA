@@ -31,6 +31,9 @@ Una consulta de flete solo puede cotizarse si el forwarder/navieria sabe **qué*
 | `fechaEstimada` | media | Disponibilidad de espacio en buque | "¿Para qué fecha necesitás embarcar?" |
 | `contacto.empresa` | media | Formalidad del RFQ | "¿A nombre de qué empresa emitimos la solicitud?" |
 | `destino.ciudad` | media | Refina puerto de descarga | "¿A qué ciudad o puerto específico llega?" |
+| `operativa.ritmoCargaDiario` | media | Dato que el PDF del desafío marca como omisión frecuente — define logística de despacho | "¿A qué ritmo podés cargar por día? (ej. 2 contenedores/día)" |
+| `operativa.plazoSobreestadiaDias` | media | Free time necesario en destino — evita demurrage (ver [[GLOSARIO]]) | "¿Cuántos días de free time necesitás en el puerto de destino?" |
+| `operativa.depositoFiscalVacios` | media | Retiro/devolución de vacío regional → mitiga roundtrips | "¿Podés retirar o devolver el contenedor vacío en un depósito fiscal regional (ej. COCEL Salta)?" |
 
 ## 3. Lógica de ejecución
 
@@ -61,5 +64,5 @@ devolver { alertas, completo }
 ## Relacionado
 
 - Agentes: [[LogisticsParser]] · [[RFQGenerator]] · [[BackendDev]] (implementa las reglas) · [[IntegradorQA]] (testea casos borde)
-- Skills: [[Parsing-NLP]] · [[Generacion-RFQ]] · [[Corredores-NOA]]
+- Skills: [[Parsing-NLP]] · [[Generacion-RFQ]] · [[Corredores-NOA]] · Vocabulario: [[GLOSARIO]]
 - [[CONTRATO-API]] §2.2/§3 · [[CONTEXTO_MAESTRO]] Módulo 2 · [[TASK_BACKLOG-LUCAS]] · [[TASK_BACKLOG-NACHO]]

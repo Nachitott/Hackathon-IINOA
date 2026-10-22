@@ -39,12 +39,18 @@ CARGA
   Equipamiento:       {cantidad} x {contenedor}
   Fecha estimada:     {fechaEstimada | "a definir"}
 
+CONDICIONES OPERATIVAS
+  Ritmo de carga:         {operativa.ritmoCargaDiario | "[A COMPLETAR]"}
+  Free time solicitado:   {operativa.plazoSobreestadiaDias} días en destino
+  Retiro/devolución vacío:{operativa.depositoFiscalVacios | "[A COMPLETAR]"} (depósito fiscal extraportuario)
+
 SE SOLICITA COTIZAR
   1. Flete marítimo {puerto_origen} → {puerto_destino}
   2. Cargos de terminal en origen (THC)
   3. Documentación y fees (B/L, handling)
   4. Tiempo de tránsito estimado y próximas salidas
   5. Validez de la tarifa ofrecida
+  6. Disponibilidad/autorización de retiro de unidad vacía en depósito fiscal regional
 
 {si alertas: "DATOS A CONFIRMAR: ..."  ← advertencias de Validacion-Expediente}
 
@@ -80,5 +86,5 @@ Formal-comercial en español rioplatense neutro. Opción futura: toggle ES/EN (l
 ## Relacionado
 
 - Agentes: [[RFQGenerator]] (propietario) · [[BackendDev]] (endpoint + PDF) · [[FrontendDev]] (editor + export) · [[LogisticsExpert]] (valida el formato comercial)
-- Skills: [[Validacion-Expediente]] · [[Corredores-NOA]] · [[Stack-Tecnico]]
+- Skills: [[Validacion-Expediente]] · [[Corredores-NOA]] · [[Stack-Tecnico]] · Vocabulario: [[GLOSARIO]] (free time, depósito fiscal, naviera)
 - [[CONTRATO-API]] §3 · [[CONTEXTO_MAESTRO]] Módulo 4 · [[TASK_BACKLOG-LUCAS]] · [[TASK_BACKLOG-NACHO]]

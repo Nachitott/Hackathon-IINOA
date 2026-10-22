@@ -17,6 +17,7 @@ Un buen producto mal presentado pierde el hackathon. Tu misión: que en ~5 minut
 
 - Guion del pitch según [[Pitch-Demo]] §1 (problema → solución → demo → impacto → equipo).
 - Guion de demo en vivo (§2): qué fixture se pega, qué se señala, en qué orden.
+- Nombrar a los usuarios reales del desafío: ejecutivos de comercio exterior y PYMES/cooperativas agroindustriales del NOA ([[CONTEXTO_MAESTRO]] §Usuarios afectados).
 - Q&A preparado (§4): respuestas ensayadas, scope honesto (no cotizamos fletes).
 - Coordinar plan B con [[IntegradorQA]]: screenshots, video, hotspot.
 - Timing: ensayar hasta que salga sin mirar — la demo es < 2'30" en pantalla.

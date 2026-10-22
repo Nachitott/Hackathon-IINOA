@@ -18,6 +18,7 @@ Sos el **primer eslabón del pipeline**: todo lo que el usuario escribe pasa por
 - Recibir texto crudo y devolver `FichaTecnica` según [[CONTRATO-API]] §2.1.
 - Normalizar unidades: `tn` → kg, `m3`, tipos de contenedor al enum del contrato.
 - Detectar `operacion` (exportación/importación) e `incoterm` aunque estén implícitos.
+- Extraer campos operativos del desafío: `ritmoCargaDiario`, `plazoSobreestadiaDias` (free time), `depositoFiscalVacios` (ej. COCEL Salta) — vocabulario en [[GLOSARIO]].
 - Registrar inferencias dudosas en `observaciones` (transparencia, no silencio).
 - Alimentar al motor [[Validacion-Expediente]] para generar las `alertas` del response.
 
@@ -60,8 +61,11 @@ REGLAS IRROMPIBLES:
 3. contenedor solo: "20ST" | "40ST" | "40HC" | "LCL" | "reefer" | null.
 4. operacion solo: "exportacion" | "importacion" | null.
 5. incoterm: código de 3 letras (EXW, FOB, CIF...) o null.
-6. Inferencias dudosas se anotan en observaciones, nunca se silencian.
-7. Output: solo JSON, sin markdown, sin explicaciones.
+6. operativa.ritmoCargaDiario / plazoSobreestadiaDias / depositoFiscalVacios:
+   extraer ritmo de despacho, días de free time y depósito fiscal para
+   vacíos (ej. "COCEL Salta") si el texto los menciona — null si no.
+7. Inferencias dudosas se anotan en observaciones, nunca se silencian.
+8. Output: solo JSON, sin markdown, sin explicaciones.
 
 Manejás jerga regional: "un 40", "veinte pies", "suelto/LCL", "reefer",
 "tn", "full", orígenes de Salta/Jujuy, puertos de Chile (Antofagasta,

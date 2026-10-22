@@ -39,6 +39,7 @@ Stack: **React (Vite) → API Express (Node) → PostgreSQL en Supabase · IA: G
 
 - [[CONTEXTO_MAESTRO]] — desafío, problema, módulos y objetivos del hackathon
 - [[CONTRATO-API]] — **fuente única de verdad** front↔back (schemas + endpoints + env vars)
+- [[GLOSARIO]] — vocabulario oficial del desafío (depósito fiscal, roundtrip, free time, Angamos, COCEL, ZOFRI)
 
 ## Agentes — `01-AGENTES/`
 
@@ -80,7 +81,7 @@ Stack: **React (Vite) → API Express (Node) → PostgreSQL en Supabase · IA: G
 
 ## Relacionado
 
-- Todo el vault se conecta desde acá: [[CONTEXTO_MAESTRO]] · [[CONTRATO-API]]
+- Todo el vault se conecta desde acá: [[CONTEXTO_MAESTRO]] · [[CONTRATO-API]] · [[GLOSARIO]]
 - Agentes: [[LogisticsParser]] · [[RouteAnalyzer]] · [[RFQGenerator]] · [[FrontendDev]] · [[BackendDev]] · [[IntegradorQA]] · [[UXUIDesigner]] · [[LogisticsExpert]] · [[Pitch]]
 - Skills: [[Parsing-NLP]] · [[Corredores-NOA]] · [[Validacion-Expediente]] · [[Generacion-RFQ]] · [[Stack-Tecnico]] · [[Testing-E2E]] · [[Pitch-Demo]]
 - Backlogs: [[TASK_BACKLOG-NACHO]] · [[TASK_BACKLOG-LUCAS]] · [[TASK_BACKLOG-BRUNO]]

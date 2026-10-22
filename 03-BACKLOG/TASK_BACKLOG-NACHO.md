@@ -65,8 +65,9 @@ owner: Nacho
 
 ### N-09 — `FichaViewer`
 `P0` · `M` · depende de: N-06
-- Render agrupado (contacto / operación / origen-destino / carga / extras). `null` → `"—"` atenuado. Campos con alerta alta: borde rojo.
+- Render agrupado (contacto / operación / origen-destino / carga / **operativa** / extras). `null` → `"—"` atenuado. Campos con alerta alta: borde rojo.
 - [ ] AC: los 7 campos altos faltantes se ven marcados de un vistazo.
+- [ ] AC: el grupo "Operativa" muestra ritmo de carga, free time y depósito fiscal con `"—"` cuando son `null`.
 
 ### N-10 — `AlertasPanel`
 `P0` · `M` · depende de: N-09
@@ -82,6 +83,7 @@ owner: Nacho
 `P0` · `M` · depende de: N-06
 - Botón "Generar RFQ" → `POST /api/rfq` → muestra `asunto` + textarea editable del `texto` + botón "Copiar" (`navigator.clipboard`). Banner si hay `advertencias`.
 - [ ] AC: el texto editado es lo que se copia; `[A COMPLETAR]` visible donde faltan datos.
+- [ ] AC: la sección "CONDICIONES OPERATIVAS" del RFQ se renderiza (free time, ritmo, depósito fiscal).
 
 ---
 
@@ -137,6 +139,6 @@ owner: Nacho
 
 - Hub: [[INDEX]] · Contexto: [[CONTEXTO_MAESTRO]] · Contrato: [[CONTRATO-API]]
 - Mi perfil: [[FrontendDev]] · renderizo a: [[LogisticsParser]] · [[RouteAnalyzer]] · [[RFQGenerator]]
-- Specs de diseño: [[UXUIDesigner]] · Skills: [[Stack-Tecnico]] · [[Generacion-RFQ]]
+- Specs de diseño: [[UXUIDesigner]] · Skills: [[Stack-Tecnico]] · [[Generacion-RFQ]] · Vocabulario: [[GLOSARIO]]
 - Backlogs del equipo: [[TASK_BACKLOG-LUCAS]] (provee la API) · [[TASK_BACKLOG-BRUNO]] (QA + branding B-06 + fixtures B-02)
 - Bugs que me reportan: template en [[Testing-E2E]] §6
