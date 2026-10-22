@@ -75,6 +75,7 @@ Stack: **React (Vite) → API Express (Node) → PostgreSQL en Supabase · IA: G
 | Nacho | Frontend | [[TASK_BACKLOG-NACHO]] |
 | Lucas | Backend + Datos | [[TASK_BACKLOG-LUCAS]] |
 | Bruno | QA + Integración + Diseño | [[TASK_BACKLOG-BRUNO]] |
+| Equipo | Cruce front↔back + E2E | [[TASK_BACKLOG-INTEGRACION]] |
 
 > Las 3 backlogs comparten las mismas 5 fases (0 Setup → 4 Demo) con tareas cruzadas por ID — una dependencia `L-09` en el backlog de Nacho referencia la tarea L-09 de Lucas.
 
@@ -85,4 +86,4 @@ Stack: **React (Vite) → API Express (Node) → PostgreSQL en Supabase · IA: G
 - Todo el vault se conecta desde acá: [[CONTEXTO_MAESTRO]] · [[CONTRATO-API]] · [[GLOSARIO]]
 - Agentes: [[LogisticsParser]] · [[RouteAnalyzer]] · [[RFQGenerator]] · [[FrontendDev]] · [[BackendDev]] · [[IntegradorQA]] · [[UXUIDesigner]] · [[LogisticsExpert]] · [[Pitch]]
 - Skills: [[Parsing-NLP]] · [[Corredores-NOA]] · [[Validacion-Expediente]] · [[Generacion-RFQ]] · [[Stack-Tecnico]] · [[Testing-E2E]] · [[Pitch-Demo]]
-- Backlogs: [[TASK_BACKLOG-NACHO]] · [[TASK_BACKLOG-LUCAS]] · [[TASK_BACKLOG-BRUNO]]
+- Backlogs: [[TASK_BACKLOG-NACHO]] · [[TASK_BACKLOG-LUCAS]] · [[TASK_BACKLOG-BRUNO]] · [[TASK_BACKLOG-INTEGRACION]]

@@ -70,6 +70,25 @@ const setPath = (obj, path, valor) => {
 
 const esNumerico = (path) => ['carga.pesoKg', 'carga.volumenM3', 'carga.cantidad', 'operativa.plazoSobreestadiaDias'].includes(path)
 
+// Campos enum del contrato: zod en el back los valida estricto — select en
+// vez de texto libre para no disparar 400 en validate/rfq/consultas.
+const SELECT_OPCIONES = {
+  operacion: [
+    ['exportacion', 'Exportación'],
+    ['importacion', 'Importación'],
+  ],
+  'carga.contenedor': [
+    ['20ST', "20' Standard (20ST)"],
+    ['40ST', "40' Standard (40ST)"],
+    ['40HC', "40' High Cube (40HC)"],
+    ['LCL', 'Carga suelta (LCL)'],
+    ['reefer', 'Reefer (refrigerado)'],
+  ],
+}
+
+const etiquetaOpcion = (path, valor) =>
+  SELECT_OPCIONES[path]?.find(([v]) => v === valor)?.[1] ?? null
+
 function Campo({ path, label, valor, severidad }) {
   const { ficha, actualizarFicha } = useApp()
   const [editando, setEditando] = useState(false)
@@ -82,10 +101,18 @@ function Campo({ path, label, valor, severidad }) {
         ? 'border-l-4 border-sev-media bg-sev-media/5'
         : 'border-l-4 border-transparent'
 
-  const guardar = () => {
+  const guardar = (crudo = borrador) => {
     setEditando(false)
-    const limpio = borrador.trim()
-    const nuevo = esNumerico(path) && limpio !== '' ? Number(limpio) : limpio === '' ? null : limpio
+    const limpio = String(crudo).trim()
+    let nuevo
+    if (limpio === '') {
+      nuevo = null
+    } else if (esNumerico(path)) {
+      const n = Number(limpio)
+      nuevo = Number.isFinite(n) ? n : null
+    } else {
+      nuevo = limpio
+    }
     if (nuevo === valor) return
     actualizarFicha(setPath(ficha, path, nuevo))
   }
@@ -103,21 +130,41 @@ function Campo({ path, label, valor, severidad }) {
       <dt className="text-xs font-medium uppercase tracking-wide text-slate-500">{label}</dt>
       <dd className="text-sm">
         {editando ? (
-          <input
-            autoFocus
-            value={borrador}
-            onChange={(e) => setBorrador(e.target.value)}
-            onBlur={guardar}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') guardar()
-              if (e.key === 'Escape') setEditando(false)
-            }}
-            className="mt-0.5 w-full rounded border border-noa-cobre px-2 py-0.5 text-sm focus:outline-none focus:ring-2 focus:ring-noa-cobre/30"
-          />
+          SELECT_OPCIONES[path] ? (
+            <select
+              autoFocus
+              value={borrador}
+              onChange={(e) => guardar(e.target.value)}
+              onBlur={() => setEditando(false)}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') setEditando(false)
+              }}
+              className="mt-0.5 w-full rounded border border-noa-cobre px-2 py-0.5 text-sm focus:outline-none focus:ring-2 focus:ring-noa-cobre/30"
+            >
+              <option value="">— vacío —</option>
+              {SELECT_OPCIONES[path].map(([v, l]) => (
+                <option key={v} value={v}>
+                  {l}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <input
+              autoFocus
+              value={borrador}
+              onChange={(e) => setBorrador(e.target.value)}
+              onBlur={() => guardar()}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') guardar()
+                if (e.key === 'Escape') setEditando(false)
+              }}
+              className="mt-0.5 w-full rounded border border-noa-cobre px-2 py-0.5 text-sm focus:outline-none focus:ring-2 focus:ring-noa-cobre/30"
+            />
+          )
         ) : valor === null || valor === undefined || valor === '' ? (
           <span className="text-slate-400">—</span>
         ) : (
-          <span className="font-medium text-slate-800">{String(valor)}</span>
+          <span className="font-medium text-slate-800">{etiquetaOpcion(path, valor) ?? String(valor)}</span>
         )}
       </dd>
     </div>

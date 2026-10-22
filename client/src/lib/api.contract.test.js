@@ -2,7 +2,8 @@
  * Tests de contrato del wrapper api.js — N-19 (preparación del cruce).
  *
  * Cubren las dos caras del wrapper sin necesitar el back real:
- *  1. USE_MOCK=true (default del .env) → shapes exactos del contrato §2/§3.
+ *  1. USE_MOCK=true (stubbed — NO depende del .env local) → shapes exactos
+ *     del contrato §2/§3.
  *  2. USE_MOCK=false → apiFetch contra un stub node:http que responde
  *     según el contrato: verifica método, body JSON, Bearer, y la
  *     normalización de errores { error: { code, message } } → ApiError.
@@ -13,8 +14,6 @@
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import { createServer } from 'node:http'
-
-import * as apiMock from './api.js'
 
 /* ---------- Stub HTTP que responde según CONTRATO-API ---------- */
 
@@ -73,8 +72,18 @@ const responder = (req, res) => {
 let server
 let baseUrl
 let portMuerto
+let apiMock
 
 beforeAll(async () => {
+  // El bloque "mocks" corre con USE_MOCK=true stubbed — independiente del
+  // .env local (que en integración queda en false).
+  vi.stubEnv('VITE_USE_MOCK', 'true')
+  vi.resetModules()
+  apiMock = await import('./api.js')
+
+  // El stub de VITE_API_URL no afecta al bloque mock, pero hay que limpiarlo
+  // para que apiReal() controle el suyo.
+  vi.unstubAllEnvs()
   server = createServer(responder)
   await new Promise((r) => server.listen(0, '127.0.0.1', r))
   baseUrl = `http://127.0.0.1:${server.address().port}/api`
@@ -96,10 +105,10 @@ const apiReal = async (apiUrl) => {
   return import('./api.js')
 }
 
-/* ---------- 1. Modo mock (default del .env) ---------- */
+/* ---------- 1. Modo mock (env stubbed — no depende del .env local) ---------- */
 
 describe('mocks — shapes del contrato', () => {
-  it('USE_MOCK=true por defecto', () => {
+  it('USE_MOCK=true en el bloque de mocks', () => {
     expect(apiMock.USE_MOCK).toBe(true)
   })
 

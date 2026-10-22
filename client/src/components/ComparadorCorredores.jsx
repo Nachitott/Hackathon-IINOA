@@ -14,6 +14,10 @@ const esInvierno = () => {
   return mes >= 5 && mes <= 7
 }
 
+// El back sirve pasos como objetos ricos {nombre, alturaMsnm, tipo, nota}
+// (CONTRATO-API §2.3); los mocks usan strings planos — se toleran ambos.
+const nombrePaso = (p) => (typeof p === 'string' ? p : p?.nombre)
+
 function CardCorredor({ corredor, seleccionado, onSeleccionar }) {
   return (
     <article
@@ -41,8 +45,8 @@ function CardCorredor({ corredor, seleccionado, onSeleccionar }) {
 
       <div className="mb-2 flex flex-wrap gap-1">
         {corredor.pasosFronterizos.map((p) => (
-          <span key={p} className="rounded-full bg-noa-andes/10 px-2 py-0.5 text-xs font-medium text-noa-andes">
-            {p}
+          <span key={nombrePaso(p)} className="rounded-full bg-noa-andes/10 px-2 py-0.5 text-xs font-medium text-noa-andes">
+            {nombrePaso(p)}
           </span>
         ))}
         {corredor.puertos.map((p) => (
@@ -91,6 +95,10 @@ export default function ComparadorCorredores() {
   }, [corredores.length, cargarCorredores])
 
   const pacificoSel = corredorSel === 'pacifico'
+  const pasoJama = corredores
+    .find((c) => c.id === 'pacifico')
+    ?.pasosFronterizos?.find((p) => /jama/i.test(nombrePaso(p) ?? ''))
+  const detalleJama = typeof pasoJama === 'object' ? pasoJama : null
 
   return (
     <section>
@@ -100,8 +108,12 @@ export default function ComparadorCorredores() {
 
       {pacificoSel && (
         <div className="mb-3 rounded-lg border border-sev-media/50 bg-sev-media/10 px-3 py-2 text-sm text-amber-900">
-          <span className="font-semibold">Paso de Jama:</span> habilitado todo el año pero con cierres
-          eventuales por nevadas en invierno (jun–ago).{' '}
+          <span className="font-semibold">
+            {nombrePaso(pasoJama) ?? 'Paso de Jama'}
+            {detalleJama?.alturaMsnm ? ` (${detalleJama.alturaMsnm} msnm)` : ''}:
+          </span>{' '}
+          {detalleJama?.nota ??
+            'habilitado todo el año pero con cierres eventuales por nevadas en invierno (jun–ago).'}{' '}
           {esInvierno() ? (
             <span className="font-bold">Estamos en temporada invernal — verificar estado antes de prometer fechas.</span>
           ) : (

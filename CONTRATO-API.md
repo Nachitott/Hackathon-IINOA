@@ -30,6 +30,8 @@ tags: [contrato, api, backend, frontend]
 | `SUPABASE_ANON_KEY` | backend + frontend | Key pública (respeta RLS) |
 | `SUPABASE_SERVICE_ROLE_KEY` | solo backend | Admin — **nunca** exponer al front |
 | `PORT` | backend | Puerto de la API (default `3001`) |
+| `CORS_ORIGIN` | backend | Orígenes permitidos, **separados por coma** (ej. `http://localhost:5173,http://localhost:4173` para dev + preview) |
+| `AUTH_OPTIONAL` | backend | `true` permite usar la API sin JWT (modo demo) |
 | `VITE_API_URL` | frontend | URL base de la API (`http://localhost:3001/api`) |
 | `VITE_SUPABASE_URL` | frontend | Igual que `SUPABASE_URL` |
 | `VITE_SUPABASE_ANON_KEY` | frontend | Igual que `SUPABASE_ANON_KEY` |
@@ -110,9 +112,16 @@ Campos ausentes en el texto original llegan como `null` — **nunca** se inventa
 {
   "id": "pacifico",
   "nombre": "Corredor Bioceánico / Pacífico",
-  "pasosFronterizos": ["Paso de Jama"],
+  "pasosFronterizos": [
+    {
+      "nombre": "Paso de Jama",
+      "alturaMsnm": 4200,
+      "tipo": "frontera integrada argentino-chilena",
+      "nota": "Paso habilitado todo el año pero con cierres eventuales por clima en invierno (nevadas). Control integrado del lado chileno."
+    }
+  ],
   "puertos": [
-    { "nombre": "Antofagasta", "pais": "CL", "lat": -23.65, "lng": -70.4 }
+    { "nombre": "Antofagasta", "pais": "CL", "lat": -23.65, "lng": -70.4, "perfil": "puerto minero" }
   ],
   "tiempoEstimadoDias": 3,
   "pros": ["..."],
@@ -120,6 +129,10 @@ Campos ausentes en el texto original llegan como `null` — **nunca** se inventa
   "consideraciones": ["..."]
 }
 ```
+
+- `pasosFronterizos[]` son **objetos ricos** (`nombre` + opcionales `alturaMsnm`, `tipo`, `nota`) — el front los normaliza a `nombre` para chips y usa `nota`/`alturaMsnm` para el banner invernal de Jama.
+- `puertos[]` puede traer `perfil` (string opcional, descriptivo).
+- Campos extra admitidos: `descripcion` (string) y `distanciaAproxKm` (mapa `origen-destino → km`).
 
 Los datos completos de dominio viven en la skill [[Corredores-NOA]] y se cargan como seed.
 
@@ -139,9 +152,12 @@ Transforma texto informal → ficha estructurada + alertas.
 {
   "ficha": { /* FichaTecnica */ },
   "alertas": [ /* Alerta[] */ ],
-  "textoOriginal": "hola necesito mandar 2 containers..."
+  "textoOriginal": "hola necesito mandar 2 containers...",
+  "modo": "gemini | fallback"
 }
 ```
+
+`modo` indica qué motor parseó: `"gemini"` (normal) o `"fallback"` (heurístico sin IA — ver regla §5.3).
 
 ### `POST /api/validate` — Módulo 2
 

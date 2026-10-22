@@ -88,10 +88,20 @@
  */
 
 /**
+ * Paso fronterizo servido por el back como objeto rico (CONTRATO-API §2.3).
+ * Se toleran strings planos (mocks/datos viejos) — normalizar con nombre.
+ * @typedef {Object} PasoFronterizo
+ * @property {string} nombre
+ * @property {number} [alturaMsnm]
+ * @property {string} [tipo]
+ * @property {string} [nota]
+ */
+
+/**
  * @typedef {Object} Corredor
  * @property {string} id
  * @property {string} nombre
- * @property {string[]} pasosFronterizos
+ * @property {(PasoFronterizo|string)[]} pasosFronterizos
  * @property {Puerto[]} puertos
  * @property {number} tiempoEstimadoDias
  * @property {string[]} pros
@@ -122,7 +132,7 @@
  * @property {FichaTecnica} ficha
  * @property {Alerta[]} alertas
  * @property {string} textoOriginal
- * @property {"fallback"} [modo]      presente si el back corrió sin Gemini
+ * @property {"gemini"|"fallback"} [modo]  motor que parseó (el back siempre lo envía)
  */
 
 /**

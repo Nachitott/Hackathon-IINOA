@@ -190,7 +190,43 @@ npm run preview   # o npm run dev
 
 ---
 
+## 2026-10-22 — Integración front↔back (cruce real)
+
+**Rama:** `feat/integracion` (merge `origin/dev` → `main`, limpio: archivos disjuntos).
+
+**Scope:** [[TASK_BACKLOG-INTEGRACION]] completo — merge, setup de envs, fixes de contrato y verificación E2E con `VITE_USE_MOCK=false`. Cierra **N-19** (pendiente solo check visual final del usuario + N-20 en máquina de presentación).
+
+### Bugs encontrados en el cruce (antes de tocar nada)
+
+| # | Bug | Fix |
+|---|---|---|
+| 1 | `pasosFronterizos`: back sirve objetos `{nombre,alturaMsnm,tipo,nota}` y `ComparadorCorredores` renderizaba `{p}` → **crash React** | Helper `nombrePaso()` tolera ambos shapes + banner Jama usa `nota`/`alturaMsnm` reales · [[CONTRATO-API]] §2.3 actualizado |
+| 2 | `operacion`/`carga.contenedor` editables como texto libre → zod rechaza (`VALIDATION_ERROR`) en validate/rfq/consultas | `<select>` con enums del contrato en `FichaViewer` (+ etiqueta legible) |
+| 3 | `CORS_ORIGIN` aceptaba un solo origen → preview `:4173` bloqueado | `app.js` parsea lista separada por comas |
+| 4 | Tests de mocks dependían del `.env` local (`VITE_USE_MOCK=true`) | `beforeAll` stubbea env + `vi.resetModules` — tests corren con cualquier `.env` |
+| 5 | `Number("abc")`→`NaN` en campos numéricos | guard `Number.isFinite` → `null` |
+
+### Verificado contra API real (`:3001`)
+
+- **`npm run healthcheck`: 8/8 ✅** — Gemini 503 intermitente → `/api/parse` alterna `modo:gemini`/`fallback`, ambos verificados.
+- **Parse:** T-01 (fallback) ficha idéntica al esperado · T-09 (gemini) extrae `plazoSobreestadiaDias:14` + `depositoFiscalVacios:"COCEL Salta"` con 0 alertas altas · T-10 `ritmoCargaDiario` capturado.
+- **Validate:** T-09 → `completo:true` · enum inválido → 400 `{error:{code,message}}` estándar.
+- **RFQ:** `RFQ – Exportación porotos (2x40HC) Perico → India` con Paso de Jama, puertos y CONDICIONES OPERATIVAS.
+- **PDF:** `application/pdf` 200, `%PDF` válido, 2 páginas.
+- **Persistencia Supabase real:** POST `/consultas` → 201 UUID → GET lo devuelve (migración de Lucas ya aplicada).
+- **CORS:** preflight OK desde `:5173` y `:4173`; origen ajeno sin header.
+- **Client:** lint 0/0 · tests 12/12 · build OK · dev `:5173` + preview `:4173` contra API real.
+
+### Pendiente
+
+- Check visual final del usuario en el preview (compartir captura).
+- N-20: ensayo en máquina de presentación.
+- Push a `origin` — pendiente de confirmación.
+- (Opcional I-17) usuario demo en Supabase Auth para login real + RLS.
+
+---
+
 ## Relacionado
 
-- Hub: [[INDEX]] · Backlog: [[TASK_BACKLOG-NACHO]] · Contrato: [[CONTRATO-API]]
+- Hub: [[INDEX]] · Backlogs: [[TASK_BACKLOG-NACHO]] · [[TASK_BACKLOG-INTEGRACION]] · Contrato: [[CONTRATO-API]]
 - Specs usadas: [[Stack-Tecnico]] · [[Testing-E2E]] · [[Validacion-Expediente]] · [[Generacion-RFQ]] · [[Corredores-NOA]]

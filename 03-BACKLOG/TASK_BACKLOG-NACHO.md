@@ -126,7 +126,7 @@ owner: Nacho
 ### N-19 — Checklist visual pre-demo
 `P0` · `S` · depende de: N-07..N-12
 - Recorrer el flujo feliz completo en `USE_MOCK=false` contra la API real + reportar a B-14.
-- [ ] AC: flujo parse→alertas→corredor→RFQ→copiar verificado E2E.
+- [x] AC: flujo parse→alertas→corredor→RFQ→copiar verificado E2E (ver [[TASK_BACKLOG-INTEGRACION]] I-11/I-12).
 
 ### N-20 — Ensayo en máquina de presentación
 `P0` · `S` · depende de: B-14

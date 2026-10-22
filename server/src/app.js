@@ -11,7 +11,11 @@ import { notFoundHandler, errorHandler } from './middleware/errors.js';
 
 const app = express();
 
-const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:5173';
+// CORS_ORIGIN admite lista separada por comas (dev :5173 + preview :4173)
+const corsOrigin = (process.env.CORS_ORIGIN || 'http://localhost:5173')
+  .split(',')
+  .map((o) => o.trim())
+  .filter(Boolean);
 app.use(cors({
   origin: corsOrigin,
   credentials: true
