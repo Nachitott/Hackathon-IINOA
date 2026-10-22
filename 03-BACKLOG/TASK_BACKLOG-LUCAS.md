@@ -28,12 +28,12 @@ owner: Lucas
 ### L-03 — Scaffold API Express
 `P0` · `S` · depende de: — · skill: [[Stack-Tecnico]]
 - Estructura `server/` según skill: `routes/`, `services/`, `db/`, `middleware/` + `npm run dev`.
-- [ ] AC: `GET /api/health` responde `{ "status": "ok" }` en `:3001`.
+- [x] AC: `GET /api/health` responde `{ "status": "ok" }` en `:3001`.
 
 ### L-04 — `.env.example` + CORS + error handler
 `P0` · `S` · depende de: L-03 · skill: [[Stack-Tecnico]]
 - `.env.example` con todas las vars del contrato §1; middleware CORS para `:5173`; error handler con shape `{ error: { code, message } }`.
-- [ ] AC: request a endpoint inexistente devuelve `{ error }` JSON, no HTML.
+- [x] AC: request a endpoint inexistente devuelve `{ error }` JSON, no HTML.
 
 ---
 
