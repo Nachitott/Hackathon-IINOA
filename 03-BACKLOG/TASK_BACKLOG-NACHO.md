@@ -18,22 +18,22 @@ owner: Nacho
 ### N-01 — Scaffold Vite + React
 `P0` · `S` · depende de: — · skill: [[Stack-Tecnico]]
 - `client/` con estructura `src/components`, `src/pages`, `src/lib` + `npm run dev`.
-- [ ] AC: app levanta en `:5173` con `App.jsx` renderizando.
+- [x] AC: app levanta en `:5173` con `App.jsx` renderizando.
 
 ### N-02 — Tailwind + tema base
 `P0` · `S` · depende de: N-01 · spec: [[UXUIDesigner]]
 - Instalar Tailwind; definir tokens: severidades (`alta`=rojo, `media`=ámbar, `ok`=verde) + paleta NOA de B-06 cuando llegue.
-- [ ] AC: clases de severidad aplicadas a un componente de prueba visible.
+- [x] AC: clases de severidad aplicadas a un componente de prueba visible.
 
 ### N-03 — Wrapper `lib/api.js`
 `P0` · `S` · depende de: N-01 · spec: [[CONTRATO-API]]
 - `apiFetch(path, opts)` con base `VITE_API_URL`, manejo de `{ error }`, loading y flag `USE_MOCK` que desvía a `lib/mocks.js`.
-- [ ] AC: `USE_MOCK=true` → las llamadas devuelven mocks sin tocar red.
+- [x] AC: `USE_MOCK=true` → las llamadas devuelven mocks sin tocar red.
 
 ### N-04 — Typedefs del contrato
 `P0` · `S` · depende de: B-01 ([[TASK_BACKLOG-BRUNO]])
 - `lib/types.js` con `@typedef` JSDoc de `FichaTecnica`, `Alerta`, `Corredor`, `Rfq` — copy exacto del contrato §2.
-- [ ] AC: un typo en el contrato se detecta en review, no en runtime.
+- [x] AC: un typo en el contrato se detecta en review, no en runtime.
 
 ---
 
@@ -42,17 +42,17 @@ owner: Nacho
 ### N-05 — Layout dashboard hero
 `P0` · `M` · depende de: N-02 · spec: [[UXUIDesigner]]
 - Vista única: columna input | ficha+alertas | comparador+RFQ (o tabs si el ancho no da). Pensado para proyector.
-- [ ] AC: en 1440px se ven las 3 zonas sin scroll horizontal.
+- [x] AC: en 1440px se ven las 3 zonas sin scroll horizontal.
 
 ### N-06 — Estado global de la ficha
 `P0` · `S` · depende de: N-04
 - `AppContext` (o `useState` elevado): `ficha`, `alertas`, `corredorSel`, `rfq`, `loading`, `error`.
-- [ ] AC: cada panel lee/actualiza el mismo estado.
+- [x] AC: cada panel lee/actualiza el mismo estado.
 
 ### N-07 — Mocks `lib/mocks.js`
 `P0` · `S` · depende de: N-04 · ejecuta temprano — desbloquea todo lo demás
 - Responses de ejemplo para `/parse`, `/validate`, `/corredores`, `/rfq` con shape idéntico al contrato (usar fixtures de B-02 como input).
-- [ ] AC: la UI corre el flujo completo sin backend levantado.
+- [x] AC: la UI corre el flujo completo sin backend levantado.
 
 ---
 
@@ -61,29 +61,29 @@ owner: Nacho
 ### N-08 — `ChatInput` + botón "Estructurar"
 `P0` · `M` · depende de: N-03, N-07
 - Textarea tipo chat que acepta texto informal → `POST /api/parse` → guarda `ficha`+`alertas` en estado. Loading con spinner; error visible.
-- [ ] AC: pegar T-01 muestra la ficha poblada (con mock primero, con API después).
+- [x] AC: pegar T-01 muestra la ficha poblada (con mock primero, con API después).
 
 ### N-09 — `FichaViewer`
 `P0` · `M` · depende de: N-06
 - Render agrupado (contacto / operación / origen-destino / carga / **operativa** / extras). `null` → `"—"` atenuado. Campos con alerta alta: borde rojo.
-- [ ] AC: los 7 campos altos faltantes se ven marcados de un vistazo.
-- [ ] AC: el grupo "Operativa" muestra ritmo de carga, free time y depósito fiscal con `"—"` cuando son `null`.
+- [x] AC: los 7 campos altos faltantes se ven marcados de un vistazo.
+- [x] AC: el grupo "Operativa" muestra ritmo de carga, free time y depósito fiscal con `"—"` cuando son `null`.
 
 ### N-10 — `AlertasPanel`
 `P0` · `M` · depende de: N-09
 - Lista de alertas con icono de severidad + la `pregunta` sugerida al cliente (el momento wow de la demo). Badge "✅ expediente completo" cuando `completo: true`.
-- [ ] AC: orden altas→medias; cada alerta linkea visualmente a su campo en la ficha.
+- [x] AC: orden altas→medias; cada alerta linkea visualmente a su campo en la ficha.
 
 ### N-11 — `ComparadorCorredores`
 `P0` · `M` · depende de: N-06 · datos: [[Corredores-NOA]]
 - Dos cards (Pacífico/Atlántico) con pros/contras/pasos/puertos + selector que guarda `corredorSel`. Banner de advertencia invernal sobre Jama.
-- [ ] AC: seleccionar un corredor habilita la generación de RFQ con contexto.
+- [x] AC: seleccionar un corredor habilita la generación de RFQ con contexto.
 
 ### N-12 — `EditorRFQ` + copiar
 `P0` · `M` · depende de: N-06
 - Botón "Generar RFQ" → `POST /api/rfq` → muestra `asunto` + textarea editable del `texto` + botón "Copiar" (`navigator.clipboard`). Banner si hay `advertencias`.
-- [ ] AC: el texto editado es lo que se copia; `[A COMPLETAR]` visible donde faltan datos.
-- [ ] AC: la sección "CONDICIONES OPERATIVAS" del RFQ se renderiza (free time, ritmo, depósito fiscal).
+- [x] AC: el texto editado es lo que se copia; `[A COMPLETAR]` visible donde faltan datos.
+- [x] AC: la sección "CONDICIONES OPERATIVAS" del RFQ se renderiza (free time, ritmo, depósito fiscal).
 
 ---
 
@@ -121,7 +121,7 @@ owner: Nacho
 ### N-18 — Botón "Cargar ejemplo"
 `P0` · `S` · depende de: B-02
 - Atajo que pega fixture T-01 (y T-04 como caso incompleto extremo) en el input — la demo no depende de tipear en vivo.
-- [ ] AC: un click carga el texto de ejemplo.
+- [x] AC: un click carga el texto de ejemplo.
 
 ### N-19 — Checklist visual pre-demo
 `P0` · `S` · depende de: N-07..N-12

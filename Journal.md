@@ -53,6 +53,45 @@ owner: Nacho
 
 ---
 
+## 2026-10-22 — Fase 1: Fundaciones + módulos core funcionales
+
+**Rama:** `feat/fase-1-fundaciones` (sale de `feat/fase-0-setup`).
+
+**Scope:** [[TASK_BACKLOG-NACHO]] Fase 1 (N-05, N-06 — N-07 ya estaba) + **Fase 2 funcional** (N-08..N-12) + N-18 adelantado: los mocks ya estaban listos y los ACs de N-06 ("cada panel lee/actualiza el mismo estado") solo se prueban con paneles reales.
+
+### Hecho
+
+| Pieza | Detalle |
+|---|---|
+| N-06 Estado | `lib/appContext.js` (contexto + `useApp`) + `lib/AppProvider.jsx` (provider) — separados para que fast-refresh funcione. Estado: `ficha, alertas, completo, modo, corredores, depositosFiscales, corredorSel, rfq, loading{}, error`. Acciones: `estructurar`, `actualizarFicha` (re-valida, regla §5.2), `cargarCorredores`, `generarRfq`, `reset`. |
+| N-05 Layout | `pages/Dashboard.jsx`: 3 zonas en `xl:grid-cols-12` (input 3 · ficha+alertas 5 · corredor+RFQ 4) — a 1440px todo visible sin scroll h; en pantallas menores se apila. Header sticky con badges MOCK/API, `modo:fallback` y error global dismissible. |
+| N-08 ChatInput | textarea + "Estructurar consulta" (spinner, disabled vacío) + error inline + botones "Ejemplo T-01/T-04/T-09" (**N-18** adelantado — un click carga el texto). |
+| N-09 FichaViewer | 6 grupos (contacto/operación/origen-destino/carga/**operativa**/extras); `null` → "—" atenuado; borde rojo/ámbar según severidad por campo; `data-campo` para linkeo; **edición inline** (click → input → Enter guarda → `POST /api/validate`). |
+| N-10 AlertasPanel | orden altas→medias, dot de severidad, `pregunta` en itálica "Preguntar: …", click → scroll + ring flash al campo; badge "✔ Expediente completo" o "N altas". |
+| N-11 Comparador | 2 cards con puertos/pasos chips, pros/contras, consideraciones en `<details>`; selector toggle → `corredorSel`; banner Jama siempre que se elige Pacífico + refuerzo si `esInvierno()` (jun–ago). |
+| N-12 EditorRFQ | "Generar RFQ" → asunto + textarea **editable** + "Copiar" (clipboard del texto EDITADO + fallback `execCommand`) + banner ámbar con `advertencias`; sync con render-phase adjust (sin effect). |
+| Router | `App.jsx` = `AppProvider` + `BrowserRouter` + ruta `/` → Dashboard (listo para Login/Historial en Fase 3). |
+
+### Decisiones
+
+- `appContext.js` + `AppProvider.jsx` separados: oxlint `only-export-components` exige archivos de componente puros.
+- Sync del texto RFQ con patrón "ajustar estado durante render" (evita warning `set-state-in-effect`).
+- Edición inline en FichaViewer: cumple la regla de convivencia §5.2 (siempre re-validar tras editar) y da vida a `/api/validate` en la demo.
+- La edición acepta vacío → `null` y numéricos → `Number` según el campo.
+
+### Verificado
+
+- `npm run lint` (oxlint): **0 warnings / 0 errors** (corregidos 2 warnings del primer pase) · `npm run build`: OK (32 módulos)
+- Dev server sirve todos los módulos 200 · flujo mock end-to-end: Ejemplo T-01 → parse → ficha + 9 alertas → corredor → RFQ con `[A COMPLETAR]`
+- Backlog: marcados 11 ACs (N-05..N-12, N-18) — quedan pendientes N-13..N-17, N-19, N-20
+
+### Pendiente / riesgos
+
+- Polish de Fase 2 si hace falta tras review visual (espaciados, copy).
+- Próximos: Fase 3 — N-13 MapaCorredores (leaflet ya instalado), N-14 login Supabase, N-15 historial, N-16 PDF, N-17 pulido.
+
+---
+
 ## Relacionado
 
 - Hub: [[INDEX]] · Backlog: [[TASK_BACKLOG-NACHO]] · Contrato: [[CONTRATO-API]]
