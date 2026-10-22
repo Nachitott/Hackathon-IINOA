@@ -1,0 +1,18 @@
+# Estado local del vault de Obsidian (UI por usuario, no se comparte)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.trash/
+
+# Dependencias y builds
+node_modules/
+dist/
+build/
+
+# Secrets — NUNCA commitear
+.env
+.env.local
+.env.*.local
+
+# Sistema
+.DS_Store
+Thumbs.db
