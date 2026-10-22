@@ -68,29 +68,29 @@ owner: Lucas
 - Prompt del template §3 + `responseMimeType: "application/json"` + `temperature: 0`; parseo seguro (JSON.parse con manejo de error → retry 1 vez con prompt de corrección).
 - Fallback heurístico §4 ejecutándose si Gemini da 5xx → response con `"modo": "fallback"`.
 - Post-parseo: correr motor de validación (L-10) y devolver `ficha` + `alertas`.
-- [ ] AC: fixture T-01 devuelve `operacion: "exportacion"`, `contenedor: "40ST"`, `cantidad: 2`, `pesoKg: null` + alertas de peso/incoterm.
-- [ ] AC: fixture T-09 extrae `operativa.depositoFiscalVacios: "COCEL Salta"` y `plazoSobreestadiaDias: 14`.
+- [x] AC: fixture T-01 devuelve `operacion: "exportacion"`, `contenedor: "40ST"`, `cantidad: 2`, `pesoKg: null` + alertas de peso/incoterm.
+- [x] AC: fixture T-09 extrae `operativa.depositoFiscalVacios: "COCEL Salta"` y `plazoSobreestadiaDias: 14`.
 
 ### L-10 — `POST /api/validate`
 `P0` · `M` · depende de: L-08 · implementa: [[Validacion-Expediente]]
 - Función pura `validarExpediente(ficha)` con la matriz de severidades; regla especial LCL→volumen alta.
-- [ ] AC: ficha vacía → 7 alertas altas; ficha T-07 → `completo: true`.
+- [x] AC: ficha vacía → 7 alertas altas; ficha T-07 → `completo: true`.
 
 ### L-11 — `GET /api/corredores`
 `P0` · `S` · depende de: L-06 · implementa: [[RouteAnalyzer]]
 - Servir el seed tal cual contrato §2.3.
-- [ ] AC: response contiene `pacifico` y `atlantico` con `puertos[].lat/lng` presentes + `depositosFiscales` con COCEL Salta.
+- [x] AC: response contiene `pacifico` y `atlantico` con `puertos[].lat/lng` presentes + `depositosFiscales` con COCEL Salta.
 
 ### L-12 — `POST /api/rfq`
 `P0` · `M` · depende de: L-08 · implementa: [[RFQGenerator]] · skill: [[Generacion-RFQ]]
 - Template string interpolation; `null` → `[A COMPLETAR]`; incluir `advertencias` corriendo L-10 sobre la ficha recibida.
-- [ ] AC: con `corredorId: "pacifico"` el texto menciona Paso de Jama y puertos chilenos.
-- [ ] AC: el RFQ incluye sección "CONDICIONES OPERATIVAS" (ritmo, free time, depósito fiscal) con `[A COMPLETAR]` si faltan.
+- [x] AC: con `corredorId: "pacifico"` el texto menciona Paso de Jama y puertos chilenos.
+- [x] AC: el RFQ incluye sección "CONDICIONES OPERATIVAS" (ritmo, free time, depósito fiscal) con `[A COMPLETAR]` si faltan.
 
 ### L-13 — Pase por `IntegradorQA`
 `P0` · `S` · depende de: L-09..L-12
 - Entregar colección de requests a Bruno para smoke (B-04) y validación de fixtures (B-05).
-- [ ] AC: los 4 endpoints core en verde en la tabla de resultados de [[Testing-E2E]].
+- [x] AC: los 4 endpoints core en verde en la tabla de resultados de [[Testing-E2E]].
 
 ---
 
