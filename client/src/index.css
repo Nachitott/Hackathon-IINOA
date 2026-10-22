@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+/*
+ * Tokens del sistema visual — spec: 01-AGENTES/UXUIDesigner.md
+ * Severidades según CONTRATO-API §2.2: alta = bloquea cotización, media = deseable.
+ * Paleta NOA (tierra / cobre / andes) PROVISIONAL — reemplazar con tokens de B-06
+ * (TASK_BACKLOG-BRUNO) cuando llegue el branding final.
+ */
+@theme {
+  /* Severidad de alertas */
+  --color-sev-alta: #dc2626;   /* rojo */
+  --color-sev-media: #f59e0b;  /* ámbar */
+  --color-sev-ok: #16a34a;     /* verde — expediente completo */
+
+  /* Identidad NOA provisional */
+  --color-noa-tierra: #8b5e3c;
+  --color-noa-cobre: #b87333;
+  --color-noa-andes: #3e5c76;
+  --color-noa-arena: #f5efe6;
+
+  /* Tipografía para proyector (zoom generoso por defecto) */
+  --font-sans: system-ui, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-noa-arena);
+  color: #1f2937;
+  font-family: var(--font-sans);
+}

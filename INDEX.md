@@ -40,6 +40,7 @@ Stack: **React (Vite) → API Express (Node) → PostgreSQL en Supabase · IA: G
 - [[CONTEXTO_MAESTRO]] — desafío, problema, módulos y objetivos del hackathon
 - [[CONTRATO-API]] — **fuente única de verdad** front↔back (schemas + endpoints + env vars)
 - [[GLOSARIO]] — vocabulario oficial del desafío (depósito fiscal, roundtrip, free time, Angamos, COCEL, ZOFRI)
+- [[Journal]] — bitácora de avance de implementación (`client/` ya scaffolded)
 
 ## Agentes — `01-AGENTES/`
 
