@@ -134,6 +134,62 @@ owner: Nacho
 
 ---
 
+## 2026-10-22 — Fase 4: preparación de demo (N-19 parcial + runbook N-20)
+
+**Rama:** `feat/fase-4-demo`.
+
+**Scope:** N-19 (checklist E2E) y N-20 (ensayo) dependen del **back real** que está construyendo otro integrante — no quedan marcados. Lo que SÍ se pudo cerrar hoy: verificación del path real del wrapper + modo producción + runbook.
+
+### Hecho
+
+| Pieza | Detalle |
+|---|---|
+| Tests de contrato | `client/src/lib/api.contract.test.js` + vitest + `npm test`. **12 tests**: 6 verifican shapes del contrato en mocks; 6 verifican el path real (`USE_MOCK=false`) contra stub `node:http` — método/URL/body, `Authorization: Bearer`, `401`/`400 { error }` → `ApiError`, PDF binario → `Blob`, API caída → `NETWORK_ERROR`. |
+| Modo producción | `npm run preview` sirve el build en `:4173` — verificado 200. **Para presentar, preferir preview sobre dev server** (sin HMR, más estable). |
+| Zoom proyector | La UI usa unidades `rem` → escala limpio con zoom del browser al 125–150% (N-20). Grid `xl` se mantiene porque el zoom reduce px efectivos, no los aumenta. |
+
+### Runbook de integración (cuando el back esté en :3001)
+
+```bash
+# 1. Back del compañero corriendo
+curl http://localhost:3001/api/health                    # → {"status":"ok"}
+
+# 2. Front apuntando a la API real
+cd client
+echo 'VITE_USE_MOCK=false
+VITE_API_URL=http://localhost:3001/api' > .env
+npm run preview   # o npm run dev
+
+# 3. Checklist E2E (Testing-E2E §4) — reportar resultado a B-14
+#    [ ] Ejemplo T-01 → ficha con "—" en nulls
+#    [ ] alertas ordenadas alta→media, click linkea al campo
+#    [ ] editar campo → /api/validate actualiza alertas
+#    [ ] elegir corredor → Generar RFQ con párrafo del corredor
+#    [ ] [A COMPLETAR] visible · Copiar texto copia lo editado
+#    [ ] Descargar PDF abre / fallback de impresión
+#    [ ] Historial: guardar consulta → recargarla repuebla
+#    [ ] modo:fallback visible si el parser corrió sin Gemini
+```
+
+### Puntos a confirmar con el back en el cruce
+
+- `GET /api/consultas` → `{ consultas: [] }` (el front también tolera array directo)
+- `POST /api/consultas` body esperado: `{ textoOriginal, ficha, alertas }`
+- CORS habilitado para `:5173` (su L-04) — el stub de tests ya lo ejercita
+- `/api/rfq/pdf` → `Content-Type: application/pdf` binario
+- Códigos de error: `{ error: { code, message } }` — el front muestra `code: message`
+
+### Verificado
+
+- `npm test`: 12/12 ✓ · `npm run lint`: 0/0 · `npm run build`: OK · `npm run preview`: sirve en `:4173`
+
+### Pendiente para cerrar el backlog
+
+- **N-19**: correr el checklist E2E de arriba con `USE_MOCK=false` contra la API real → reportar a B-14.
+- **N-20**: ensayo en la máquina de presentación (front + back, zoom 125–150%, plan B con screenshots).
+
+---
+
 ## Relacionado
 
 - Hub: [[INDEX]] · Backlog: [[TASK_BACKLOG-NACHO]] · Contrato: [[CONTRATO-API]]
