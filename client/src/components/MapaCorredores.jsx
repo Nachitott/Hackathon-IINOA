@@ -1,30 +1,34 @@
 /**
  * N-13 — Mapa de corredores (Leaflet + OSM, gratis sin API key).
- * Marcadores de puertos (lat/lng del contrato §2.3) + líneas desde los
- * orígenes NOA típicos hacia cada puerto, coloreadas por corredor.
- * Fallback: si el mapa no inicializa → devuelve null y quedan las cards.
+ * Marcadores de puertos (lat/lng del contrato §2.3) + líneas desde el
+ * ORIGEN DE LA FICHA hacia cada puerto, coloreadas por corredor — se
+ * redibuja con cada consulta. Tooltip con distanciaAproxKm cuando el
+ * seed la conoce. Fallback: si el mapa no inicializa → null + cards.
  */
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useApp } from '../lib/appContext.js'
-
-// Orígenes NOA frecuentes (presentación — no son datos del contrato).
-const ORIGENES = [
-  { nombre: 'Salta', lat: -24.7829, lng: -65.4232 },
-  { nombre: 'S.S. de Jujuy', lat: -24.1858, lng: -65.2995 },
-]
+import { resolveOrigen, ORIGENES_DEFAULT, distanciaKm } from '../lib/origen.js'
 
 // Color por corredor — alineado con los tokens NOA de index.css.
 const COLORES = { pacifico: '#3e5c76', atlantico: '#b87333' }
 
 export default function MapaCorredores() {
-  const { corredores, corredorSel } = useApp()
+  const { corredores, corredorSel, ficha } = useApp()
   const refDiv = useRef(null)
   const refMapa = useRef(null)
   const refCapas = useRef(null)
   const [fallo, setFallo] = useState(false)
+
+  // Origen del tramo terrestre: el de la ficha si es una ciudad NOA conocida,
+  // si no, Salta + S.S. de Jujuy como contexto regional. Memoizado — cambia
+  // solo cuando cambia la ficha (nueva consulta o edición).
+  const origenes = useMemo(() => {
+    const o = resolveOrigen(ficha)
+    return o ? [o] : ORIGENES_DEFAULT
+  }, [ficha])
 
   // Inicializar el mapa una sola vez.
   useEffect(() => {
@@ -47,7 +51,8 @@ export default function MapaCorredores() {
     }
   }, [])
 
-  // Redibujar marcadores y líneas cuando llegan corredores o cambia el seleccionado.
+  // Redibujar cuando llegan corredores, cambia el seleccionado O cambia el
+  // origen de la consulta — el mapa se actualiza con cada nueva consulta.
   useEffect(() => {
     const mapa = refMapa.current
     const capas = refCapas.current
@@ -55,7 +60,7 @@ export default function MapaCorredores() {
     capas.clearLayers()
     const bounds = []
 
-    for (const o of ORIGENES) {
+    for (const o of origenes) {
       L.circleMarker([o.lat, o.lng], {
         radius: 6,
         color: '#8b5e3c',
@@ -64,7 +69,7 @@ export default function MapaCorredores() {
         fillOpacity: 0.9,
       })
         .addTo(capas)
-        .bindTooltip(o.nombre, { direction: 'top' })
+        .bindTooltip(`Origen: ${o.nombre}`, { direction: 'top' })
       bounds.push([o.lat, o.lng])
     }
 
@@ -72,7 +77,7 @@ export default function MapaCorredores() {
       const color = COLORES[c.id] ?? '#64748b'
       const atenuar = corredorSel && corredorSel !== c.id
       for (const p of c.puertos) {
-        for (const o of ORIGENES) {
+        for (const o of origenes) {
           L.polyline(
             [
               [o.lat, o.lng],
@@ -81,6 +86,7 @@ export default function MapaCorredores() {
             { color, weight: atenuar ? 1.5 : 3, opacity: atenuar ? 0.25 : 0.75, dashArray: '6 6' },
           ).addTo(capas)
         }
+        const km = distanciaKm(c, origenes[0]?.slug, p.nombre)
         L.circleMarker([p.lat, p.lng], {
           radius: atenuar ? 4 : 7,
           color,
@@ -89,13 +95,16 @@ export default function MapaCorredores() {
           fillOpacity: atenuar ? 0.3 : 0.85,
         })
           .addTo(capas)
-          .bindTooltip(`${p.nombre} (${c.nombre})`, { direction: 'top' })
+          .bindTooltip(
+            `${p.nombre} (${c.nombre})${km ? ` · ~${km} km desde ${origenes[0].nombre}` : ''}`,
+            { direction: 'top' },
+          )
         bounds.push([p.lat, p.lng])
       }
     }
 
     if (bounds.length) mapa.fitBounds(bounds, { padding: [24, 24] })
-  }, [corredores, corredorSel])
+  }, [corredores, corredorSel, origenes])
 
   if (fallo || corredores.length === 0) return null
 

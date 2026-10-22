@@ -28,7 +28,7 @@ const imprimirRfq = (asunto, texto) => {
 }
 
 export default function EditorRFQ() {
-  const { ficha, rfq, generarRfq, loading, corredorSel } = useApp()
+  const { ficha, rfq, generarRfq, loading, corredorSel, alertas } = useApp()
   const { token } = useAuth()
   const [textoEditado, setTextoEditado] = useState('')
   const [copiado, setCopiado] = useState(false)
@@ -91,9 +91,15 @@ export default function EditorRFQ() {
         <button
           type="button"
           onClick={generarRfq}
-          disabled={!ficha || Boolean(loading.rfq)}
+          disabled={!ficha || Boolean(loading.rfq) || alertas.length > 0}
           className="rounded-lg bg-noa-tierra px-4 py-2 text-sm font-semibold text-white transition hover:bg-noa-tierra/90 disabled:cursor-not-allowed disabled:opacity-50"
-          title={ficha ? 'Generar solicitud de cotización' : 'Primero estructurá una consulta'}
+          title={
+            !ficha
+              ? 'Primero estructurá una consulta'
+              : alertas.length > 0
+                ? `Faltan ${alertas.length} dato(s) por completar`
+                : 'Generar solicitud de cotización'
+          }
         >
           {loading.rfq ? 'Generando…' : 'Generar RFQ'}
         </button>
@@ -101,9 +107,11 @@ export default function EditorRFQ() {
 
       {!rfq ? (
         <p className="text-sm text-slate-500">
-          {ficha
-            ? `Lista para generar${corredorSel ? ` — corredor ${corredorSel} seleccionado` : ''}.`
-            : 'Necesitás una ficha estructurada para generar el RFQ.'}
+          {!ficha
+            ? 'Necesitás una ficha estructurada para generar el RFQ.'
+            : alertas.length > 0
+              ? `Completá los ${alertas.length} datos faltantes (ver alertas) para generar el RFQ.`
+              : `Lista para generar${corredorSel ? ` — corredor ${corredorSel} seleccionado` : ''}.`}
         </p>
       ) : (
         <div className="space-y-3">

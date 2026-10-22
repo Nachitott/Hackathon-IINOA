@@ -226,6 +226,33 @@ npm run preview   # o npm run dev
 
 ---
 
+## 2026-10-22 — Bug-fixes post-testeo demo (fix/demo-bugs)
+
+**Rama:** `fix/demo-bugs` → merge a `main` local. Backlog: FASE 4 (B-01..B-04) de [[TASK_BACKLOG-INTEGRACION]].
+
+El equipo testeó la app integrada y reportó 4 bugs de demo. Causas raíz y fixes:
+
+| # | Bug reportado | Causa raíz | Fix |
+|---|---|---|---|
+| 1 | Mapa/comparador: distancias incorrectas, no se actualiza por consulta | Orígenes hardcodeados (Salta+SSJ), effect sin `ficha`, `distanciaAproxKm` del back nunca consumido | `client/src/lib/origen.js` (resolveOrigen: Salta/SSJ/Perico/Güemes/Orán → coords+slug) · mapa redibuja por origen memoizado · `~N km` real en tooltips + cards |
+| 2 | RFQ generable con medias pendientes | `completo` solo cuenta `alta`; botón sin gate; panel ocultaba medias sin altas | `EditorRFQ` disabled mientras `alertas.length>0` (+ conteo en tooltip/texto) · `AlertasPanel` lista TODAS las alertas, badge verde solo con 0 |
+| 3 | Textarea de consulta no se adapta al texto | `rows={10}` fijo + `flex-1`/`h-full` heredaban alto de grilla | auto-grow por `scrollHeight` (tope ~40vh), `resize-none`, `self-start` |
+| 4 | Datos del usuario no llegaban a la ficha | `parseFallback` no reconocía "mi nombre es", "somos la empresa", "la mercadería es", "N kilos", Tierra del Fuego; y pisaba Perico con SSJ | patrones nuevos + guard de ciudad específica + limpieza de puntuación · mismas reglas en prompt de Gemini |
+
+### Verificación
+
+- `POST /api/parse` con el texto exacto reportado → `Peluk`/`Vitex`, `San Salvador de Jujuy/Jujuy` → `Tierra del Fuego/Argentina`, `coca`, `40 kg`, `exportacion` (modo fallback).
+- Regresión: seeds reales (Perico/COCEL/14d free time, Salta→China 2×40ST, Güemes→Miami reefer FOB) + T-10 (ritmo 1/día) parsean correctos.
+- Client: `npm run lint` 0/0 · `npm test` 12/12 · `npm run build` OK · módulos editados sirven 200 en `:5173`.
+- Back reiniciado y healthcheck OK tras los cambios del parser.
+
+### Pendiente
+
+- Check visual del usuario: mapa por consulta, RFQ bloqueado con medias, textarea auto-grow.
+- N-20 (máquina de presentación) · push a `origin` pendiente de confirmación.
+
+---
+
 ## Relacionado
 
 - Hub: [[INDEX]] · Backlogs: [[TASK_BACKLOG-NACHO]] · [[TASK_BACKLOG-INTEGRACION]] · Contrato: [[CONTRATO-API]]

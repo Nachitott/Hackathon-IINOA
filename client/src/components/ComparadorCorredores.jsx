@@ -7,6 +7,7 @@
 
 import { useEffect } from 'react'
 import { useApp } from '../lib/appContext.js'
+import { resolveOrigen, distanciaDesdeOrigen } from '../lib/origen.js'
 import MapaCorredores from './MapaCorredores.jsx'
 
 const esInvierno = () => {
@@ -18,7 +19,7 @@ const esInvierno = () => {
 // (CONTRATO-API §2.3); los mocks usan strings planos — se toleran ambos.
 const nombrePaso = (p) => (typeof p === 'string' ? p : p?.nombre)
 
-function CardCorredor({ corredor, seleccionado, onSeleccionar }) {
+function CardCorredor({ corredor, seleccionado, onSeleccionar, kmDesdeOrigen, nombreOrigen }) {
   return (
     <article
       className={`flex flex-col rounded-xl border-2 bg-white p-4 shadow-sm transition ${
@@ -28,7 +29,10 @@ function CardCorredor({ corredor, seleccionado, onSeleccionar }) {
       <header className="mb-2 flex items-start justify-between gap-2">
         <div>
           <h3 className="font-bold text-noa-tierra">{corredor.nombre}</h3>
-          <p className="text-xs text-slate-500">~{corredor.tiempoEstimadoDias} días terrestres</p>
+          <p className="text-xs text-slate-500">
+            ~{corredor.tiempoEstimadoDias} días terrestres
+            {kmDesdeOrigen ? ` · ~${kmDesdeOrigen} km desde ${nombreOrigen}` : ''}
+          </p>
         </div>
         <button
           type="button"
@@ -88,7 +92,8 @@ function CardCorredor({ corredor, seleccionado, onSeleccionar }) {
 }
 
 export default function ComparadorCorredores() {
-  const { corredores, corredorSel, setCorredorSel, cargarCorredores, loading } = useApp()
+  const { corredores, corredorSel, setCorredorSel, cargarCorredores, loading, ficha } = useApp()
+  const origen = resolveOrigen(ficha)
 
   useEffect(() => {
     if (corredores.length === 0) cargarCorredores()
@@ -134,6 +139,8 @@ export default function ComparadorCorredores() {
               corredor={c}
               seleccionado={corredorSel === c.id}
               onSeleccionar={() => setCorredorSel(corredorSel === c.id ? null : c.id)}
+              kmDesdeOrigen={origen ? distanciaDesdeOrigen(c, origen.slug) : null}
+              nombreOrigen={origen?.nombre}
             />
           ))}
         </div>

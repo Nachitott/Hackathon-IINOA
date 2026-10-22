@@ -21,7 +21,7 @@ const irAlCampo = (campo) => {
 }
 
 export default function AlertasPanel() {
-  const { ficha, alertas, completo, loading } = useApp()
+  const { ficha, alertas, loading } = useApp()
 
   if (!ficha) {
     if (loading.parse) {
@@ -48,24 +48,30 @@ export default function AlertasPanel() {
     a.severidad === b.severidad ? 0 : a.severidad === 'alta' ? -1 : 1,
   )
   const nAltas = alertas.filter((a) => a.severidad === 'alta').length
+  const nMedias = alertas.length - nAltas
+  const sinAlertas = alertas.length === 0
 
   return (
     <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-noa-tierra">Alertas</h2>
-        {completo ? (
+        {sinAlertas ? (
           <span className="rounded-full bg-sev-ok px-3 py-1 text-xs font-bold text-white">
             ✔ Expediente completo
           </span>
         ) : (
-          <span className="rounded-full bg-sev-alta px-3 py-1 text-xs font-bold text-white">
-            {nAltas} alta{nAltas === 1 ? '' : 's'}
+          <span
+            className={`rounded-full px-3 py-1 text-xs font-bold text-white ${nAltas > 0 ? 'bg-sev-alta' : 'bg-sev-media'}`}
+          >
+            {nAltas > 0 ? `${nAltas} alta${nAltas === 1 ? '' : 's'}` : ''}
+            {nAltas > 0 && nMedias > 0 ? ' · ' : ''}
+            {nMedias > 0 ? `${nMedias} media${nMedias === 1 ? '' : 's'}` : ''}
           </span>
         )}
       </div>
 
-      {completo ? (
-        <p className="text-sm text-slate-600">Sin datos faltantes críticos — lista para generar RFQ.</p>
+      {sinAlertas ? (
+        <p className="text-sm text-slate-600">Sin datos faltantes — lista para generar RFQ.</p>
       ) : (
         <ul className="space-y-2">
           {ordenadas.map((a) => {

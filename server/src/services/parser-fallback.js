@@ -92,10 +92,13 @@ export function parseFallback(texto) {
     origenProvincia = 'Jujuy';
   }
   if (/jujuy|san salvador/i.test(texto)) {
-    if (/llegaria.*jujuy|a.*jujuy/i.test(texto) || operacion === 'importacion') {
-      destinoCiudad = 'San Salvador de Jujuy';
-      destinoPais = 'Argentina';
-    } else {
+    // "desde jujuy" → origen · "a/hasta/hacia jujuy" → destino (evita el falso
+    // positivo de "a.*jujuy" que capturaba cualquier 'a' previa en el texto)
+    if (/llegaria.*jujuy|\b(?:a|hasta|hacia|para)\s+jujuy\b/i.test(texto) || operacion === 'importacion') {
+      if (!destinoCiudad) destinoCiudad = 'San Salvador de Jujuy';
+      if (!destinoPais) destinoPais = 'Argentina';
+    } else if (!origenCiudad) {
+      // No pisa una ciudad más específica ya detectada (Perico, Güemes…)
       origenCiudad = 'San Salvador de Jujuy';
       origenProvincia = 'Jujuy';
     }
@@ -119,13 +122,32 @@ export function parseFallback(texto) {
   if (/europa/i.test(texto)) destinoPais = 'Europa';
   if (/chile/i.test(texto)) destinoPais = 'Chile';
 
+  // Destinos regionales argentinos (fuera del NOA pero frecuentes en consultas)
+  if (/tierra\s+de(l)?\s+fuego|ushuaia|r[ií]o\s+grande/i.test(texto)) {
+    if (operacion === 'importacion') {
+      if (!origenCiudad) {
+        origenCiudad = 'Tierra del Fuego';
+        origenProvincia = 'Tierra del Fuego';
+      }
+    } else {
+      destinoCiudad = /ushuaia/i.test(texto) ? 'Ushuaia' : 'Tierra del Fuego';
+      destinoPais = 'Argentina';
+    }
+  }
+
   // 8. Carga Tipo
   let tipoCarga = null;
-  const CARGAS = ['sal', 'litio', 'arandanos', 'arándanos', 'azucar', 'azúcar', 'porotos', 'limones', 'legumbres', 'maquinaria', 'tabaco', 'minerales'];
-  for (const c of CARGAS) {
-    if (new RegExp(`\\b${c}\\b`, 'i').test(texto)) {
-      tipoCarga = c.toLowerCase();
-      break;
+  // Primero el patrón explícito "la mercadería es X" — más preciso que el diccionario
+  const mercaderiaMatch = texto.match(/mercader[ií]a\s*(?:es|:)?\s*([a-záéíóúñ]+)/i);
+  if (mercaderiaMatch) {
+    tipoCarga = mercaderiaMatch[1].toLowerCase();
+  } else {
+    const CARGAS = ['sal', 'litio', 'arandanos', 'arándanos', 'azucar', 'azúcar', 'porotos', 'limones', 'legumbres', 'maquinaria', 'tabaco', 'minerales', 'coca', 'harina', 'cemento', 'vino', 'aceite', 'uva', 'quinua'];
+    for (const c of CARGAS) {
+      if (new RegExp(`\\b${c}\\b`, 'i').test(texto)) {
+        tipoCarga = c.toLowerCase();
+        break;
+      }
     }
   }
 
@@ -157,6 +179,26 @@ export function parseFallback(texto) {
     contactoNombre = contactoMatch[1].trim();
     contactoEmpresa = contactoMatch[2].trim();
   }
+  // Nombre suelto: "mi nombre es X" / "me llamo X" / "soy X"
+  if (!contactoNombre) {
+    const nombreMatch = texto.match(/mi\s+nombres?\s+es\s+([a-záéíóúñ]+)|me\s+llamo\s+([a-záéíóúñ]+)|soy\s+([a-záéíóúñ]+)/i);
+    if (nombreMatch) {
+      contactoNombre = (nombreMatch[1] ?? nombreMatch[2] ?? nombreMatch[3]).trim();
+    }
+  }
+  // Empresa: "(la) empresa X" / "somos X" (evita capturar "la" de "somos la empresa")
+  if (!contactoEmpresa) {
+    const empresaMatch =
+      texto.match(/empresa\s+([a-záéíóúñ0-9\.]+)/i) ??
+      texto.match(/somos\s+(?!(?:la|el|los|las|de|del|que|por|para|una|un)\b)\s*([a-záéíóúñ0-9\.]+)/i);
+    if (empresaMatch) {
+      contactoEmpresa = (empresaMatch[1] ?? empresaMatch[2]).trim();
+    }
+  }
+  // Capitalización presentable
+  const capitalizar = (s) => s && s.replace(/\.+$/, '').replace(/^./, (c) => c.toUpperCase());
+  contactoNombre = capitalizar(contactoNombre);
+  contactoEmpresa = capitalizar(contactoEmpresa);
 
   return {
     contacto: {

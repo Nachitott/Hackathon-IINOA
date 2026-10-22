@@ -34,6 +34,8 @@ REGLAS ESTRICTAS:
   * "pallets sueltos", "compartido", "suelto" -> "LCL"
   * "reefer", "camara fria" -> "reefer"
   * Orígenes típicos NOA: Salta, Jujuy, General Güemes, Perico, Orán.
+- Contacto: si el texto se presenta ("mi nombre es X", "soy X") -> contacto.nombre; si nombra empresa ("la empresa X", "somos X", "X S.A.") -> contacto.empresa. Nunca inventes estos datos.
+- Dirección del viaje: "desde X" marca ORIGEN; "hasta/a X" marca DESTINO. Destinos regionales argentinos (ej. "tierra de fuego" -> destino.ciudad "Tierra del Fuego", destino.pais "Argentina").
 
 SCHEMA ESPERADO:
 {

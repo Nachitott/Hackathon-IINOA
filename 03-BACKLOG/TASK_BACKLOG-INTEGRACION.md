@@ -143,6 +143,41 @@ owner: Equipo (Nacho + Lucas + Bruno)
 
 ---
 
+## FASE 4 — Bug-fixes post-testeo demo (rama `fix/demo-bugs`)
+
+Bugs reportados por el equipo tras probar la app integrada. Todos verificados contra API real + build/lint/tests verdes.
+
+### B-01 — Mapa reactivo a la consulta + distancias reales
+`P0` · `M` · bug reportado: "comparador/mapa marca distancias incorrectas y no se actualiza por consulta"
+- [x] Causa raíz: `MapaCorredores` usaba orígenes hardcodeados (Salta + SSJ) y su effect ignoraba `ficha`; el front nunca consumía `distanciaAproxKm` del back.
+- [x] Fix: nuevo `client/src/lib/origen.js` — `resolveOrigen(ficha)` mapea ciudades NOA (Salta, SSJ, Perico, Gral. Güemes, Orán) → coords + slug de distancia; fallback a ambos orígenes si la ciudad es nula/desconocida.
+- [x] Fix: mapa dibuja líneas/marcadores desde el origen de la ficha y se redibuja por `origenes` memoizado → cada consulta nueva refresca el mapa.
+- [x] Fix: tooltips de puertos muestran `~N km desde {origen}` con `distanciaAproxKm["slugOrigen-puerto"]`; cards del comparador muestran `~N días · ~N km`.
+- [x] AC: parse de "desde Jujuy…" → mapa dibuja un solo origen (SSJ) con distancia real en tooltips/cards; origen desconocido → fallback regional sin romper.
+
+### B-02 — Gate de RFQ hasta expediente completo (0 alertas)
+`P0` · `S` · bug reportado: "corregidas las altas permite generar RFQ con medias pendientes"
+- [x] Causa raíz: `completo` del back solo considera severidad `alta`; el botón no tenía gate y el badge ocultaba las medias cuando no quedaban altas.
+- [x] Fix: `EditorRFQ` — botón `disabled` mientras `alertas.length > 0`, con tooltip + texto auxiliar indicando cuántos datos faltan.
+- [x] Fix: `AlertasPanel` — muestra TODAS las alertas (badge "N altas · M medias"); "✔ Expediente completo" solo cuando `alertas.length === 0`, consistente con el gate del RFQ.
+- [x] AC: ficha con solo medias pendientes → medias visibles, sin badge verde, botón RFQ deshabilitado; 0 alertas → badge verde + RFQ habilitado.
+
+### B-03 — Textarea de consulta adaptable verticalmente
+`P1` · `S` · bug reportado: "el apartado de consulta debe adaptarse al texto a lo vertical"
+- [x] Causa raíz: `rows={10}` fijo + `flex-1`/`h-full` heredaban el alto de la grilla, no del contenido.
+- [x] Fix: `ChatInput` auto-grow vía `ref` + `scrollHeight` (tope ~40vh, scroll interno después), `resize-none`, `self-start` en la card.
+- [x] AC: pegar texto largo → el campo crece hasta el tope; texto corto → altura mínima razonable.
+
+### B-04 — Parser fallback entiende lenguaje natural del usuario
+`P0` · `M` · bug reportado: "campos aclarados en la consulta no se reflejaron en la ficha" (modo fallback activo)
+- [x] Causa raíz: `parser-fallback.js` solo reconocía "soy X de Y" para contacto, un diccionario fijo sin "coca"/"porotos"-style libre, sin "tierra del fuego" ni direccionalidad `desde/hasta`; además el bloque "jujuy" pisaba ciudades específicas (Perico → SSJ).
+- [x] Fix: patrones nuevos — "mi nombre es X", "somos la empresa X", "la mercadería es X", "N kilos/kg/tn", Tierra del Fuego; guard para no pisar ciudad específica con la provincia; limpieza de puntuación final en nombre/empresa.
+- [x] Fix: prompt de `gemini.js` — mismas reglas para que Gemini y fallback extraigan lo mismo.
+- [x] AC: texto exacto reportado → `Peluk`/`Vitex`, origen `San Salvador de Jujuy/Jujuy`, destino `Tierra del Fuego/Argentina`, `coca`, `40 kg` (verificado vía `POST /api/parse`, `modo:fallback`).
+- [x] AC regresión: seeds reales (Perico×COCEL, Salta→China, Güemes→Miami) y T-10 parsean igual o mejor que antes.
+
+---
+
 ## Riesgos / notas del cruce
 
 - **Gemini 503 intermitente** (`gemini-*-flash` por demanda): el back reintenta con el siguiente modelo y cae a `modo:fallback` declarado en UI — la demo nunca se bloquea; el badge lo transparenta.

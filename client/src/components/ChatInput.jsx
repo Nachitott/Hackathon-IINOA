@@ -4,19 +4,28 @@
  * de tipear en vivo.
  */
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useApp } from '../lib/appContext.js'
 import { EJEMPLOS } from '../lib/mocks.js'
 
 export default function ChatInput() {
   const { estructurar, loading, error } = useApp()
   const [texto, setTexto] = useState('')
+  const refArea = useRef(null)
   const cargando = Boolean(loading.parse)
 
   const enviar = () => estructurar(texto)
 
+  // Auto-grow vertical: el textarea crece con el contenido (tope ~40vh).
+  useEffect(() => {
+    const el = refArea.current
+    if (!el) return
+    el.style.height = 'auto'
+    el.style.height = `${Math.min(el.scrollHeight, window.innerHeight * 0.4)}px`
+  }, [texto])
+
   return (
-    <section className="flex h-full flex-col rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+    <section className="flex flex-col self-start rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
       <h2 className="mb-3 text-lg font-semibold text-noa-tierra">Consulta informal</h2>
 
       <div className="mb-2 flex flex-wrap gap-2">
@@ -34,11 +43,12 @@ export default function ChatInput() {
       </div>
 
       <textarea
+        ref={refArea}
         value={texto}
         onChange={(e) => setTexto(e.target.value)}
-        rows={10}
+        rows={8}
         placeholder='Pegá acá el mensaje del cliente. Ej: "necesito mandar 2 containers de 40 de sal a china desde salta"'
-        className="w-full flex-1 resize-none rounded-lg border border-slate-300 p-3 text-sm leading-relaxed focus:border-noa-cobre focus:outline-none focus:ring-2 focus:ring-noa-cobre/30"
+        className="w-full resize-none overflow-y-auto rounded-lg border border-slate-300 p-3 text-sm leading-relaxed focus:border-noa-cobre focus:outline-none focus:ring-2 focus:ring-noa-cobre/30"
       />
 
       <button
